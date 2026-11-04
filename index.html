@@ -6,33 +6,35 @@
 <title>milt — contacts</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Подключил Space Mono для времени и Inter/Space Grotesk для остального -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-    --bg: #0b0b10;
-    --bg-soft: #111118;
-    --card: #16161f;
-    --border: rgba(255,255,255,0.07);
-    --border-hover: rgba(255,255,255,0.18);
-    --text: #f2f2f5;
-    --muted: #77778a;
+    --bg: #0a0a0f;
+    --bg-soft: #13131c;
+    --card: #1a1a26;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.22);
+    --text: #f5f5f8;
+    --muted: #85859a;
     --dim: #3a3a48;
-    --accent: #7c5cff;
-    --accent-2: #2AABEE;
+    --accent: #a855f7;      /* фиолетовый */
+    --accent-2: #22d3ee;    /* голубой */
+    --accent-3: #f472b6;    /* розовый */
     --tg: #2AABEE;
     --ds: #5865F2;
-    --green: #23a55a;
-    --red: #ff4757;
+    --green: #22c55e;
+    --red: #ef4444;
 }
 
 body.light {
-    --bg: #f8f8fa;
+    --bg: #f9f9fb;
     --bg-soft: #ffffff;
     --card: #ffffff;
     --border: rgba(0,0,0,0.08);
-    --border-hover: rgba(0,0,0,0.2);
+    --border-hover: rgba(0,0,0,0.22);
     --text: #14141a;
     --muted: #6b6b7a;
     --dim: #d0d0d8;
@@ -49,7 +51,7 @@ body {
     position: relative;
 }
 
-/* Фоновая сетка */
+/* Яркая фоновая сетка с градиентным свечением */
 body::before {
     content: '';
     position: fixed;
@@ -65,13 +67,13 @@ body::before {
     z-index: 0;
 }
 
-/* Свечение за курсором */
+/* Курсорное свечение */
 .cursor-glow {
     position: fixed;
     width: 600px;
     height: 600px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(124,92,255,0.13) 0%, transparent 65%);
+    background: radial-gradient(circle, rgba(168,85,247,0.15) 0%, transparent 65%);
     pointer-events: none;
     transform: translate(-50%, -50%);
     transition: opacity 0.3s;
@@ -83,15 +85,13 @@ body:hover .cursor-glow { opacity: 1; }
 /* Верхняя панель */
 .topbar {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 0; left: 0; right: 0;
     padding: 20px 32px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 10;
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(16px);
     background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
     transition: background 0.4s;
 }
@@ -108,42 +108,46 @@ body:hover .cursor-glow { opacity: 1; }
     text-decoration: none;
 }
 .logo-dot {
-    width: 8px;
-    height: 8px;
+    width: 8px; height: 8px;
     border-radius: 50%;
     background: var(--green);
-    box-shadow: 0 0 10px var(--green);
+    box-shadow: 0 0 12px var(--green);
     animation: blink 2s ease-in-out infinite;
 }
 @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-.top-actions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
+.top-actions { display: flex; gap: 10px; align-items: center; }
 
+/* БЛОК ЧАСОВ (обновлён) */
 .clock {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--muted);
-    padding: 6px 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    padding: 8px 14px;
     border: 1px solid var(--border);
     border-radius: 999px;
     letter-spacing: 0.5px;
     background: var(--bg-soft);
     transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.clock svg {
+    width: 14px;
+    height: 14px;
+    fill: var(--accent-2);
+    filter: drop-shadow(0 0 4px var(--accent-2));
 }
 
 .icon-btn {
-    width: 38px;
-    height: 38px;
+    width: 38px; height: 38px;
     border-radius: 50%;
     background: var(--bg-soft);
     border: 1px solid var(--border);
     color: var(--muted);
-    display: grid;
-    place-items: center;
+    display: grid; place-items: center;
     cursor: pointer;
     transition: all 0.25s ease;
 }
@@ -169,18 +173,12 @@ body:hover .cursor-glow { opacity: 1; }
 }
 
 /* ЛЕВАЯ КОЛОНКА */
-.left {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 28px;
-}
+.left { display: flex; flex-direction: column; align-items: flex-start; gap: 28px; }
 
 /* Аватар */
 .avatar-container {
     position: relative;
-    width: 150px;
-    height: 150px;
+    width: 150px; height: 150px;
     animation: float 6s ease-in-out infinite;
 }
 @keyframes float {
@@ -188,25 +186,24 @@ body:hover .cursor-glow { opacity: 1; }
     50% { transform: translateY(-8px); }
 }
 
+/* Более яркое и цветное кольцо вокруг аватара */
 .avatar-ring {
     position: absolute;
     inset: -8px;
     border-radius: 50%;
-    background: conic-gradient(from 0deg, var(--accent), var(--accent-2), var(--accent));
-    animation: spin 8s linear infinite;
-    filter: blur(1px);
-    opacity: 0.8;
+    background: conic-gradient(from 0deg, var(--accent), var(--accent-2), var(--accent-3), var(--accent));
+    animation: spin 6s linear infinite;
+    filter: blur(2px);
+    opacity: 1;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .avatar-inner {
     position: relative;
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    display: grid;
-    place-items: center;
+    display: grid; place-items: center;
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     font-size: 56px;
@@ -226,8 +223,7 @@ body:hover .cursor-glow { opacity: 1; }
     inset: 0;
     border-radius: 50%;
     background: rgba(0,0,0,0.7);
-    display: grid;
-    place-items: center;
+    display: grid; place-items: center;
     color: #fff;
     opacity: 0;
     transition: opacity 0.25s;
@@ -236,23 +232,15 @@ body:hover .cursor-glow { opacity: 1; }
 }
 .avatar-container:hover .avatar-overlay { opacity: 1; }
 .avatar-overlay-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-align: center;
 }
 .avatar-overlay svg { width: 28px; height: 28px; fill: #fff; }
 
 .online-dot {
     position: absolute;
-    bottom: 8px;
-    right: 8px;
-    width: 22px;
-    height: 22px;
+    bottom: 8px; right: 8px;
+    width: 22px; height: 22px;
     border-radius: 50%;
     background: var(--green);
     border: 3px solid var(--bg);
@@ -266,16 +254,13 @@ body:hover .cursor-glow { opacity: 1; }
 /* Кнопка сброса аватара */
 .avatar-reset {
     position: absolute;
-    top: -6px;
-    right: -6px;
-    width: 32px;
-    height: 32px;
+    top: -6px; right: -6px;
+    width: 32px; height: 32px;
     border-radius: 50%;
     background: var(--card);
     border: 1px solid var(--border);
     color: var(--muted);
-    display: grid;
-    place-items: center;
+    display: grid; place-items: center;
     cursor: pointer;
     z-index: 5;
     transition: all 0.25s;
@@ -284,33 +269,23 @@ body:hover .cursor-glow { opacity: 1; }
     pointer-events: none;
 }
 .avatar-container:hover .avatar-reset.active {
-    opacity: 1;
-    transform: scale(1);
-    pointer-events: auto;
+    opacity: 1; transform: scale(1); pointer-events: auto;
 }
 .avatar-reset:hover {
     color: var(--red);
-    border-color: rgba(255,71,87,0.4);
-    background: rgba(255,71,87,0.1);
+    border-color: rgba(239,68,68,0.4);
+    background: rgba(239,68,68,0.1);
 }
 .avatar-reset svg { width: 14px; height: 14px; fill: currentColor; }
 
 /* Заголовок */
 .greeting {
-    font-size: 13px;
-    color: var(--muted);
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    font-size: 13px; color: var(--muted); font-weight: 500;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    display: flex; align-items: center; gap: 10px;
 }
 .greeting::before {
-    content: '';
-    width: 24px;
-    height: 1px;
-    background: var(--muted);
+    content: ''; width: 24px; height: 1px; background: var(--muted);
 }
 
 .title {
@@ -321,8 +296,9 @@ body:hover .cursor-glow { opacity: 1; }
     line-height: 0.95;
     margin-top: -8px;
 }
+/* Более яркий градиент для заголовка */
 .title .highlight {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -330,18 +306,13 @@ body:hover .cursor-glow { opacity: 1; }
 }
 
 .description {
-    font-size: 15px;
-    color: var(--muted);
-    line-height: 1.65;
+    font-size: 15px; color: var(--muted); line-height: 1.65;
     max-width: 420px;
 }
 
 .status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    font-weight: 500;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 500;
     color: var(--text);
     padding: 8px 14px;
     border: 1px solid var(--border);
@@ -349,36 +320,25 @@ body:hover .cursor-glow { opacity: 1; }
     background: var(--bg-soft);
 }
 .status-pill .dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
+    width: 7px; height: 7px; border-radius: 50%;
     background: var(--green);
     box-shadow: 0 0 8px var(--green);
     animation: blink 2s ease-in-out infinite;
 }
 
 /* ПРАВАЯ КОЛОНКА */
-.right {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
+.right { display: flex; flex-direction: column; gap: 16px; }
 
 .section-label {
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-weight: 500;
+    font-size: 11px; color: var(--muted);
+    letter-spacing: 2px; text-transform: uppercase; font-weight: 500;
     margin-bottom: 4px;
 }
 
 /* Кнопки контактов */
 .contact {
     position: relative;
-    display: flex;
-    align-items: center;
-    gap: 18px;
+    display: flex; align-items: center; gap: 18px;
     padding: 22px 24px;
     background: var(--card);
     border: 1px solid var(--border);
@@ -404,50 +364,36 @@ body:hover .cursor-glow { opacity: 1; }
 }
 
 .contact .icon-large {
-    width: 52px;
-    height: 52px;
+    width: 52px; height: 52px;
     border-radius: 16px;
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 2;
+    display: grid; place-items: center;
+    flex-shrink: 0; position: relative; z-index: 2;
     transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .contact .icon-large svg { width: 26px; height: 26px; fill: #fff; }
 
-.contact.tg .icon-large { background: linear-gradient(135deg, #2AABEE, #229ED9); box-shadow: 0 8px 24px rgba(42,171,238,0.35); }
-.contact.ds .icon-large { background: linear-gradient(135deg, #5865F2, #4752C4); box-shadow: 0 8px 24px rgba(88,101,242,0.35); }
+.contact.tg .icon-large { background: linear-gradient(135deg, #2AABEE, #22d3ee); box-shadow: 0 8px 24px rgba(34,211,238,0.4); }
+.contact.ds .icon-large { background: linear-gradient(135deg, #5865F2, #a855f7); box-shadow: 0 8px 24px rgba(168,85,247,0.4); }
 
 .contact:hover .icon-large { transform: rotate(-8deg) scale(1.08); }
 
 .contact-info { flex: 1; min-width: 0; position: relative; z-index: 2; }
 .contact-name { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; margin-bottom: 3px; }
 .contact-handle {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--muted);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; color: var(--muted);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
-.contact-actions {
-    display: flex;
-    gap: 6px;
-    position: relative;
-    z-index: 2;
-}
+.contact-actions { display: flex; gap: 6px; position: relative; z-index: 2; }
 
 .mini-btn {
-    width: 34px;
-    height: 34px;
+    width: 34px; height: 34px;
     border-radius: 10px;
     background: transparent;
     border: 1px solid var(--border);
     color: var(--muted);
-    display: grid;
-    place-items: center;
+    display: grid; place-items: center;
     cursor: pointer;
     transition: all 0.2s ease;
     flex-shrink: 0;
@@ -461,56 +407,41 @@ body:hover .cursor-glow { opacity: 1; }
 .mini-btn svg { width: 15px; height: 15px; fill: currentColor; }
 .mini-btn.copied {
     color: var(--green);
-    border-color: rgba(35,165,90,0.5);
-    background: rgba(35,165,90,0.08);
+    border-color: rgba(34,197,94,0.5);
+    background: rgba(34,197,94,0.08);
 }
 
 .contact .arrow {
-    color: var(--muted);
-    font-size: 20px;
-    transition: all 0.3s;
-    position: relative;
-    z-index: 2;
+    color: var(--muted); font-size: 20px;
+    transition: all 0.3s; position: relative; z-index: 2;
 }
 .contact:hover .arrow { color: var(--text); transform: translateX(4px); }
 
-/* Hover-градиент для каждой кнопки */
+/* Более яркие hover-градиенты */
 .contact::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.4s;
-    pointer-events: none;
-    z-index: 0;
+    content: ''; position: absolute; inset: 0;
+    opacity: 0; transition: opacity 0.4s;
+    pointer-events: none; z-index: 0;
 }
-.contact.tg::before { background: linear-gradient(90deg, rgba(42,171,238,0.08), transparent 70%); }
-.contact.ds::before { background: linear-gradient(90deg, rgba(88,101,242,0.08), transparent 70%); }
+.contact.tg::before { background: linear-gradient(90deg, rgba(34,211,238,0.1), transparent 70%); }
+.contact.ds::before { background: linear-gradient(90deg, rgba(168,85,247,0.1), transparent 70%); }
 .contact:hover::before { opacity: 1; }
 
 /* Нижняя панель */
 .bottom-bar {
-    display: flex;
-    gap: 10px;
-    margin-top: 8px;
+    display: flex; gap: 10px; margin-top: 8px;
     animation: slideIn 0.7s 0.3s ease-out both;
 }
 
 .action-btn {
-    flex: 1;
-    padding: 14px;
+    flex: 1; padding: 14px;
     border-radius: 14px;
     background: transparent;
     border: 1px dashed var(--border);
     color: var(--muted);
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 500;
+    font-family: inherit; font-size: 13px; font-weight: 500;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
     transition: all 0.25s ease;
 }
 .action-btn:hover {
@@ -524,17 +455,14 @@ body:hover .cursor-glow { opacity: 1; }
 /* Footer */
 .footer {
     position: fixed;
-    bottom: 20px;
-    left: 50%;
+    bottom: 20px; left: 50%;
     transform: translateX(-50%);
     font-size: 11px;
     color: var(--muted);
     letter-spacing: 1.5px;
     opacity: 0.5;
     z-index: 5;
-    display: flex;
-    gap: 12px;
-    align-items: center;
+    display: flex; gap: 12px; align-items: center;
     text-transform: uppercase;
 }
 .footer .sep { opacity: 0.4; }
@@ -542,22 +470,19 @@ body:hover .cursor-glow { opacity: 1; }
 /* Toast */
 .toast {
     position: fixed;
-    bottom: 70px;
-    left: 50%;
+    bottom: 70px; left: 50%;
     transform: translateX(-50%) translateY(100px);
     background: var(--green);
     color: #fff;
     padding: 12px 22px;
     border-radius: 12px;
-    font-size: 13.5px;
-    font-weight: 500;
+    font-size: 13.5px; font-weight: 500;
     box-shadow: 0 12px 32px rgba(0,0,0,0.4);
     opacity: 0;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 100;
     pointer-events: none;
-    max-width: 90vw;
-    text-align: center;
+    max-width: 90vw; text-align: center;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .toast.error { background: var(--red); }
@@ -565,8 +490,7 @@ body:hover .cursor-glow { opacity: 1; }
 /* Конфетти */
 .confetti {
     position: fixed;
-    width: 10px;
-    height: 10px;
+    width: 10px; height: 10px;
     pointer-events: none;
     z-index: 999;
     animation: confettiFall linear forwards;
@@ -619,7 +543,11 @@ body:hover .cursor-glow { opacity: 1; }
         milt
     </a>
     <div class="top-actions">
-        <span class="clock" id="clock">--:--:--</span>
+        <!-- ЧАСЫ: добавлена иконка часов и исправлен рендер -->
+        <span class="clock" id="clock">
+            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+            <span id="timeText">--:--:--</span>
+        </span>
         <button class="icon-btn" id="themeBtn" title="Сменить тему">
             <svg id="themeIcon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
         </button>
@@ -708,52 +636,4 @@ body:hover .cursor-glow { opacity: 1; }
         <!-- Нижняя панель -->
         <div class="bottom-bar">
             <button class="action-btn" id="shareBtn">
-                <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
-                Поделиться
-            </button>
-        </div>
-
-    </section>
-
-</main>
-
-<!-- Footer -->
-<div class="footer">
-    <span>© milt</span>
-    <span class="sep">·</span>
-    <span id="year">2025</span>
-</div>
-
-<!-- Toast -->
-<div class="toast" id="toast">Скопировано!</div>
-
-<script>
-// ========== ЭЛЕМЕНТЫ ==========
-const avatar = document.getElementById('avatar');
-const avatarInput = document.getElementById('avatarInput');
-const avatarContainer = document.getElementById('avatarContainer');
-const avatarReset = document.getElementById('avatarReset');
-const themeBtn = document.getElementById('themeBtn');
-const themeIcon = document.getElementById('themeIcon');
-const clock = document.getElementById('clock');
-const toast = document.getElementById('toast');
-const cursorGlow = document.getElementById('cursorGlow');
-
-let toastTimer;
-
-// ========== TOAST ==========
-function showToast(msg, isError = false) {
-    toast.textContent = msg;
-    toast.classList.toggle('error', isError);
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
-}
-
-// ========== ЧАСЫ ==========
-function updateClock() {
-    const d = new Date();
-    const p = n => String(n).padStart(2, '0');
-    clock.textContent = `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
-}
-update
+                <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 
