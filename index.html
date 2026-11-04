@@ -3,24 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#faf8f5">
+<meta name="theme-color" content="#f5f0e8">
 <title>milt — studio</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
---paper:#faf8f5;--ink:#1a1a1a;--ink2:#4a4a4a;--ink3:#8a8a8a;
---line:#e5e0d8;--line2:#d0c8bc;
+--paper:#f5f0e8;--paper2:#ede5d8;--paper3:#e5dcc9;
+--ink:#1a1a1a;--ink2:#4a4a4a;--ink3:#8a8a8a;
+--line:#d8cfc0;--line2:#c4b8a5;
 --accent:#c8482c;--accent2:#e8a838;--accent3:#2a5c3a;
---paper2:#f2ede4;
+--lav:#8a7bb8;--mint:#7ba896;--peach:#e89a7a;
 }
 body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.4 0 0 0 0 0.3 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");mix-blend-mode:multiply}
 
-.topbar{position:fixed;top:0;left:0;right:0;padding:24px 40px;display:flex;justify-content:space-between;align-items:center;z-index:100;background:rgba(250,248,245,.92);backdrop-filter:blur(20px);border-bottom:1px solid transparent;transition:border-color .3s}
+/* ============ ЖИВОЙ ФОН ============ */
+.bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg-orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.45;animation:orbFloat 25s ease-in-out infinite}
+.bg-orb.o1{width:600px;height:600px;background:var(--peach);top:-15%;left:-10%;animation-delay:0s}
+.bg-orb.o2{width:500px;height:500px;background:var(--lav);bottom:10%;right:-10%;animation-delay:-8s;opacity:.35}
+.bg-orb.o3{width:450px;height:450px;background:var(--mint);top:45%;left:50%;animation-delay:-16s;opacity:.28}
+@keyframes orbFloat{
+0%,100%{transform:translate(0,0) scale(1)}
+25%{transform:translate(60px,-50px) scale(1.1)}
+50%{transform:translate(-40px,60px) scale(.95)}
+75%{transform:translate(50px,40px) scale(1.05)}
+}
+.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(200,72,44,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(200,72,44,.04) 1px,transparent 1px);background-size:40px 40px;mask-image:radial-gradient(ellipse at 50% 40%,black 20%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse at 50% 40%,black 20%,transparent 80%)}
+.bg-noise{position:absolute;inset:0;opacity:.35;pointer-events:none;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.4 0 0 0 0 0.3 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* Каракули на фоне */
+.bg-doodle{position:absolute;pointer-events:none;opacity:.15}
+.bg-doodle.d1{top:15%;right:5%;width:180px}
+.bg-doodle.d2{bottom:20%;left:3%;width:140px;opacity:.12}
+.bg-doodle.d3{top:60%;right:10%;width:100px;opacity:.1}
+.bg-doodle path{stroke:var(--accent);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* Курсор-карандаш */
+.pencil-cursor{position:fixed;width:32px;height:32px;pointer-events:none;z-index:9999;transform:translate(-4px,-28px) rotate(-15deg);transition:transform .15s ease-out;opacity:0;mix-blend-mode:multiply}
+body:hover .pencil-cursor{opacity:.8}
+.pencil-cursor svg{width:100%;height:100%;filter:drop-shadow(2px 2px 2px rgba(0,0,0,.15))}
+
+/* ============ ТОПБАР ============ */
+.topbar{position:fixed;top:0;left:0;right:0;padding:24px 40px;display:flex;justify-content:space-between;align-items:center;z-index:100;background:rgba(245,240,232,.88);backdrop-filter:blur(20px);border-bottom:1px solid transparent;transition:border-color .3s}
 .topbar.scrolled{border-bottom-color:var(--line)}
-.logo{font-family:'Fraunces',serif;font-weight:600;font-size:24px;letter-spacing:-1px;color:var(--ink);text-decoration:none;font-style:italic}
+.logo{font-family:'Fraunces',serif;font-weight:600;font-size:24px;letter-spacing:-1px;color:var(--ink);text-decoration:none;font-style:italic;position:relative}
 .logo::after{content:'.';color:var(--accent)}
+.logo::before{content:'';position:absolute;bottom:-4px;left:0;right:0;height:4px;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 100 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,2 Q25,0 50,2 T100,2' stroke='%23c8482c' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") no-repeat;background-size:100% 100%;opacity:.5}
 .nav{display:flex;gap:36px;align-items:center}
 .nav a{font-size:13px;font-weight:500;color:var(--ink2);text-decoration:none;letter-spacing:.02em;position:relative;padding:4px 0;transition:color .2s}
 .nav a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--ink);transition:width .3s cubic-bezier(.22,1,.36,1)}
@@ -31,31 +60,39 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 .time-display .dot{width:6px;height:6px;border-radius:50%;background:var(--accent3);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
 
+/* ============ HERO ============ */
 .hero{max-width:1440px;margin:0 auto;padding:160px 60px 80px;position:relative;z-index:1}
 .hero-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;align-items:end}
 .hero-eyebrow{grid-column:1/5;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:32px}
 .hero-eyebrow span{color:var(--accent)}
-.hero-title{grid-column:1/13;font-family:'Fraunces',serif;font-weight:300;font-size:clamp(72px,13vw,200px);line-height:.85;letter-spacing:-.06em;margin-bottom:40px;font-style:italic}
+.hero-title{grid-column:1/13;font-family:'Fraunces',serif;font-weight:300;font-size:clamp(72px,13vw,200px);line-height:.85;letter-spacing:-.06em;margin-bottom:40px;font-style:italic;position:relative}
 .hero-title .roman{font-weight:400;font-style:normal;letter-spacing:-.07em}
-.hero-title .accent{color:var(--accent);font-weight:600}
-.hero-desc{grid-column:1/8;font-size:18px;line-height:1.65;color:var(--ink2);max-width:640px}
+.hero-title .accent{color:var(--accent);font-weight:600;position:relative;display:inline-block}
+.hero-title .accent::after{content:'';position:absolute;bottom:-8px;left:0;right:0;height:8px;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2,5 Q30,2 60,4 T120,5 T198,4' stroke='%23c8482c' stroke-width='1.5' fill='none' opacity='0.5'/%3E%3C/svg%3E") no-repeat;background-size:100% 100%}
+.hero-desc{grid-column:1/8;font-size:18px;line-height:1.65;color:var(--ink2);max-width:640px;position:relative}
 .hero-desc em{font-family:'Fraunces',serif;font-style:italic;color:var(--ink);font-weight:500}
+.hero-desc::before{content:'↓';position:absolute;left:-32px;top:2px;font-family:'Caveat',cursive;font-size:32px;color:var(--accent);opacity:.6;transform:rotate(-8deg)}
 .hero-aside{grid-column:9/13;display:flex;flex-direction:column;gap:20px;padding-bottom:8px}
 .hero-aside-line{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3)}
 .hero-aside-line strong{color:var(--ink);font-weight:500;letter-spacing:0;text-transform:none;font-family:'Inter',sans-serif;font-size:13px}
 
+/* Секции */
 .section{max-width:1440px;margin:0 auto;padding:100px 60px;position:relative;z-index:1}
 .section-divider{max-width:1440px;margin:0 auto;padding:0 60px;border-top:1px solid var(--line)}
-.section-header{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;margin-bottom:60px;align-items:end}
+.section-header{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;margin-bottom:60px;align-items:end;position:relative}
 .section-num{grid-column:1/2;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--accent);padding-bottom:6px}
-.section-title{grid-column:2/8;font-family:'Fraunces',serif;font-size:clamp(40px,5.5vw,80px);font-weight:400;letter-spacing:-.04em;line-height:.95}
+.section-title{grid-column:2/8;font-family:'Fraunces',serif;font-size:clamp(40px,5.5vw,80px);font-weight:400;letter-spacing:-.04em;line-height:.95;position:relative}
 .section-title em{font-style:italic;color:var(--accent)}
+.section-title .doodle-line{position:absolute;bottom:-12px;left:0;width:120px;height:8px}
+.section-title .doodle-line path{stroke:var(--accent);stroke-width:1.5;fill:none;stroke-linecap:round;opacity:.5}
 .section-meta{grid-column:9/13;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);text-align:right;padding-bottom:8px}
 
+/* Контакты */
 .contacts{display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
 .contact{grid-column:span 4;display:flex;flex-direction:column;padding:32px 0;border-top:1px solid var(--ink);text-decoration:none;color:var(--ink);position:relative;transition:padding .3s}
 .contact:hover{padding-left:12px}
-.contact-num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--ink3);margin-bottom:24px}
+.contact:hover .contact-num{color:var(--accent)}
+.contact-num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--ink3);margin-bottom:24px;transition:color .2s}
 .contact-platform{font-family:'Fraunces',serif;font-size:32px;font-weight:500;letter-spacing:-.02em;margin-bottom:6px;font-style:italic}
 .contact-handle{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink2);margin-bottom:28px;letter-spacing:.02em;word-break:break-all}
 .contact-bottom{display:flex;justify-content:space-between;align-items:end;margin-top:auto}
@@ -65,8 +102,9 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 .contact-arrow{font-family:'Fraunces',serif;font-size:32px;font-style:italic;color:var(--accent);transition:transform .3s}
 .contact:hover .contact-arrow{transform:translate(4px,-4px)}
 
+/* Услуги */
 .services{display:grid;grid-template-columns:repeat(12,1fr);gap:32px}
-.service{grid-column:span 6;padding:40px 0;border-top:1px solid var(--line)}
+.service{grid-column:span 6;padding:40px 0;border-top:1px solid var(--line);position:relative}
 .service:last-child{border-bottom:1px solid var(--line)}
 .service-num{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:var(--ink3);margin-bottom:20px;text-transform:uppercase}
 .service-title{font-family:'Fraunces',serif;font-size:36px;font-weight:400;letter-spacing:-.03em;line-height:1.1;margin-bottom:16px}
@@ -75,25 +113,29 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 .service-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
 .service-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border:1px solid var(--line2);color:var(--ink3);border-radius:999px}
 
-/* Достижения — минималистичные иконки-номера */
+/* Достижения */
 .achievements{display:grid;grid-template-columns:repeat(12,1fr);gap:32px}
 .achievement{grid-column:span 4;padding:36px 0;border-top:1px solid var(--ink);display:flex;flex-direction:column;gap:20px;position:relative;transition:padding .3s}
 .achievement:hover{padding-left:12px}
 .achievement-mark{display:flex;align-items:center;justify-content:space-between}
-.achievement-num{font-family:'Fraunces',serif;font-size:56px;font-weight:300;letter-spacing:-.05em;color:var(--accent);font-style:italic;line-height:1}
+.achievement-num{font-family:'Fraunces',serif;font-size:56px;font-weight:300;letter-spacing:-.05em;color:var(--accent);font-style:italic;line-height:1;position:relative}
+.achievement-num::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:3px;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 60 3' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,1.5 Q15,0 30,1.5 T60,1.5' stroke='%23c8482c' stroke-width='1' fill='none' opacity='0.4'/%3E%3C/svg%3E") no-repeat;background-size:100% 100%}
 .achievement-index{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3)}
 .achievement-title{font-family:'Fraunces',serif;font-size:24px;font-weight:400;letter-spacing:-.02em;line-height:1.2}
 .achievement-desc{font-size:13px;line-height:1.6;color:var(--ink2);max-width:280px}
 
+/* Заметки */
 .notes{display:grid;grid-template-columns:repeat(12,1fr);gap:32px}
-.note{grid-column:span 4;padding:32px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;min-height:240px}
+.note{grid-column:span 4;padding:32px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;min-height:240px;position:relative}
 .note-date{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;margin-bottom:20px}
 .note-title{font-family:'Fraunces',serif;font-size:26px;font-weight:400;letter-spacing:-.02em;line-height:1.2;margin-bottom:12px;font-style:italic}
 .note-text{font-size:14px;line-height:1.7;color:var(--ink2);flex:1}
 .note-meta{margin-top:24px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase}
 
+/* Сейчас в работе */
 .now-working{display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
-.work-item{grid-column:span 6;padding:32px;background:var(--paper2);border:1px solid var(--line);position:relative;overflow:hidden}
+.work-item{grid-column:span 6;padding:32px;background:var(--paper2);border:1px solid var(--line);position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s}
+.work-item:hover{transform:translateY(-4px);box-shadow:0 20px 40px -15px rgba(26,26,26,.15)}
 .work-item::before{content:'';position:absolute;top:0;left:0;height:2px;background:var(--accent);animation:progress 3s ease-in-out infinite}
 @keyframes progress{0%{width:0;left:0}50%{width:100%;left:0}100%{width:0;left:100%}}
 .work-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:20px}
@@ -103,6 +145,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 .work-title{font-family:'Fraunces',serif;font-size:24px;font-weight:400;letter-spacing:-.02em;margin-bottom:10px;font-style:italic}
 .work-desc{font-size:13px;line-height:1.6;color:var(--ink2)}
 
+/* Полка */
 .shelf{display:grid;grid-template-columns:repeat(12,1fr);gap:24px}
 .shelf-col{grid-column:span 4;padding:32px 0;border-top:1px solid var(--ink)}
 .shelf-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);margin-bottom:20px}
@@ -111,13 +154,32 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 .shelf-item-title{font-family:'Fraunces',serif;font-size:16px;font-weight:400;font-style:italic;letter-spacing:-.01em}
 .shelf-item-author{font-size:11px;color:var(--ink3);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;text-align:right;flex-shrink:0}
 
+/* Каракули секция */
+.doodles-section{padding:100px 60px;max-width:1440px;margin:0 auto;position:relative;z-index:1}
+.doodles-header{text-align:center;margin-bottom:60px}
+.doodles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1200px;margin:0 auto}
+.doodle-sticker{padding:32px;background:var(--paper2);border:1px solid var(--line);position:relative;min-height:220px;display:flex;flex-direction:column;transition:transform .3s,box-shadow .3s;transform:rotate(-1deg)}
+.doodle-sticker:nth-child(2){transform:rotate(1deg)}
+.doodle-sticker:nth-child(3){transform:rotate(-.5deg)}
+.doodle-sticker:nth-child(4){transform:rotate(.8deg)}
+.doodle-sticker:nth-child(5){transform:rotate(-1.2deg)}
+.doodle-sticker:nth-child(6){transform:rotate(.5deg)}
+.doodle-sticker:hover{transform:rotate(0) translateY(-4px);box-shadow:0 20px 40px -15px rgba(26,26,26,.15)}
+.doodle-sticker::before{content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:40px;height:16px;background:rgba(232,168,56,.4);border:1px solid rgba(232,168,56,.6);border-radius:2px}
+.sticker-hand{font-family:'Caveat',cursive;font-size:28px;font-weight:600;color:var(--accent);line-height:1;margin-bottom:16px;position:relative}
+.sticker-hand::after{content:'';position:absolute;bottom:-6px;left:0;width:60px;height:2px;background:var(--accent);opacity:.3;border-radius:2px}
+.sticker-text{font-family:'Caveat',cursive;font-size:22px;line-height:1.3;color:var(--ink);flex:1}
+.sticker-meta{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);margin-top:16px}
+
+/* Цитата */
 .quote-of-day{max-width:1440px;margin:0 auto;padding:120px 60px;text-align:center;position:relative;z-index:1}
 .quote-mark{font-family:'Fraunces',serif;font-size:120px;line-height:.5;color:var(--accent);opacity:.3;font-weight:300;display:block;margin-bottom:24px}
 .quote-text{font-family:'Fraunces',serif;font-size:clamp(28px,3.5vw,48px);font-weight:400;line-height:1.25;letter-spacing:-.02em;max-width:900px;margin:0 auto 24px;font-style:italic}
 .quote-author{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3)}
 .quote-author::before{content:'— ';color:var(--accent)}
 
-.cta{max-width:1440px;margin:0 auto;padding:100px 60px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center;position:relative;z-index:1}
+/* CTA */
+.cta{max-width:1440px;margin:0 auto;padding:100px 60px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center;position:relative;z-index:1;background:linear-gradient(180deg,transparent,rgba(232,154,122,.08))}
 .cta-title{font-family:'Fraunces',serif;font-size:clamp(48px,7vw,120px);font-weight:300;line-height:.95;letter-spacing:-.04em;margin-bottom:32px;font-style:italic}
 .cta-title em{font-style:normal;color:var(--accent);font-weight:500}
 .cta-desc{font-size:16px;color:var(--ink2);max-width:520px;margin:0 auto 40px;line-height:1.7}
@@ -125,8 +187,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 .cta-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:var(--accent);transition:left .4s cubic-bezier(.22,1,.36,1);z-index:0}
 .cta-btn:hover::before{left:0}
 .cta-btn span{position:relative;z-index:1}
-.cta-btn:hover{color:var(--paper)}
 
+/* Footer */
 .footer{max-width:1440px;margin:0 auto;padding:60px;display:grid;grid-template-columns:repeat(12,1fr);gap:32px;border-top:1px solid var(--line);position:relative;z-index:1}
 .footer-brand{grid-column:1/5}
 .footer-brand .logo{font-size:32px;margin-bottom:16px;display:inline-block}
@@ -135,28 +197,17 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 .footer-col h4{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);margin-bottom:20px;font-weight:500}
 .footer-col a{display:block;font-size:13px;color:var(--ink2);text-decoration:none;padding:6px 0;transition:color .2s}
 .footer-col a:hover{color:var(--accent)}
-.footer-bottom{max-width:1440px;margin:0 auto;padding:32px 60px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);flex-wrap:wrap;gap:16px}
+.footer-bottom{max-width:1440px;margin:0 auto;padding:32px 60px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);flex-wrap:wrap;gap:16px;position:relative;z-index:1}
 
+/* Toast */
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--ink);color:var(--paper);padding:16px 28px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;opacity:0;transition:all .5s cubic-bezier(.22,1,.36,1);z-index:1000;pointer-events:none;max-width:90vw;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-.modal-bg{position:fixed;inset:0;background:rgba(26,26,26,.6);backdrop-filter:blur(8px);display:none;place-items:center;z-index:1000;padding:20px}
-.modal-bg.open{display:grid}
-.modal{background:var(--paper);padding:48px;max-width:420px;width:100%;animation:modalIn .4s cubic-bezier(.22,1,.36,1)}
-@keyframes modalIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.modal h3{font-family:'Fraunces',serif;font-size:28px;font-weight:400;letter-spacing:-.02em;margin-bottom:12px;font-style:italic}
-.modal p{font-size:14px;color:var(--ink2);margin-bottom:24px;line-height:1.6}
-.modal input{width:100%;padding:16px;background:transparent;border:none;border-bottom:1px solid var(--ink);color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:14px;margin-bottom:24px;outline:none;transition:border-color .2s}
-.modal input:focus{border-bottom-color:var(--accent)}
-.modal-btns{display:flex;gap:12px}
-.modal-btns button{flex:1;padding:16px;background:transparent;border:1px solid var(--ink);color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .25s}
-.modal-btns button:hover{background:var(--ink);color:var(--paper)}
-.modal-btns .primary{background:var(--ink);color:var(--paper)}
-.modal-btns .primary:hover{background:var(--accent);border-color:var(--accent)}
-
+/* Reveal */
 .reveal{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
 .reveal.visible{opacity:1;transform:translateY(0)}
 
+/* ============ АДАПТИВ ============ */
 @media(max-width:1024px){
 .hero{padding:120px 32px 60px}
 .section{padding:80px 32px}
@@ -169,6 +220,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 .section-meta{margin-top:12px}
 .contacts,.services,.notes,.now-working,.shelf,.achievements{grid-template-columns:repeat(6,1fr)}
 .contact,.service,.note,.work-item,.shelf-col,.achievement{grid-column:1/7}
+.doodles-section{padding:80px 32px}
+.doodles-grid{grid-template-columns:1fr 1fr}
 .quote-of-day{padding:80px 32px}
 .cta{padding:80px 32px}
 .footer{grid-template-columns:repeat(6,1fr);padding:48px 32px}
@@ -177,6 +230,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 .footer-bottom{padding:24px 32px;flex-direction:column;text-align:center}
 .nav{display:none}
 .topbar{padding:16px 24px}
+.pencil-cursor{display:none}
 }
 @media(max-width:640px){
 .hero{padding:100px 20px 40px}
@@ -184,6 +238,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 .section-divider{padding:0 20px}
 .hero-title{font-size:clamp(56px,14vw,120px)}
 .hero-desc{font-size:15px}
+.hero-desc::before{display:none}
 .section-title{font-size:clamp(36px,10vw,56px)}
 .contact-platform{font-size:26px}
 .service-title{font-size:28px}
@@ -191,18 +246,39 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 .work-title{font-size:20px}
 .achievement-num{font-size:44px}
 .achievement-title{font-size:20px}
+.doodles-section{padding:60px 20px}
+.doodles-grid{grid-template-columns:1fr}
 .quote-text{font-size:clamp(22px,6vw,32px)}
 .quote-mark{font-size:80px}
 .cta-title{font-size:clamp(40px,11vw,72px)}
 .cta-btn{padding:16px 28px;font-size:11px}
 .footer-col,.footer-brand{grid-column:1/7}
-.modal{padding:32px 24px}
+.footer-bottom{padding:24px 20px}
 .contact-bottom{flex-direction:column;align-items:flex-start;gap:12px}
+.bg-orb{filter:blur(60px)}
+.bg-doodle{display:none}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+
+<!-- ЖИВОЙ ФОН -->
+<div class="bg-layer">
+<div class="bg-orb o1"></div>
+<div class="bg-orb o2"></div>
+<div class="bg-orb o3"></div>
+<div class="bg-grid"></div>
+<div class="bg-noise"></div>
+<svg class="bg-doodle d1" viewBox="0 0 180 100"><path d="M10,50 Q40,20 70,45 T130,40 T170,50"/><path d="M20,70 Q50,50 80,65 T160,60"/></svg>
+<svg class="bg-doodle d2" viewBox="0 0 140 90"><circle cx="30" cy="30" r="15"/><circle cx="70" cy="45" r="20"/><circle cx="110" cy="60" r="12"/></svg>
+<svg class="bg-doodle d3" viewBox="0 0 100 80"><path d="M10,40 Q30,10 50,40 T90,40"/></svg>
+</div>
+
+<!-- КУРСОР-КАРАНДАШ -->
+<div class="pencil-cursor" id="pencil">
+<svg viewBox="0 0 32 32"><path d="M4 28 L8 20 L24 4 L28 8 L12 24 Z" fill="#e8a838" stroke="#1a1a1a" stroke-width="1.2"/><path d="M8 20 L12 24" stroke="#1a1a1a" stroke-width="1.2"/><path d="M24 4 L28 8" stroke="#1a1a1a" stroke-width="1.2"/><circle cx="28" cy="4" r="1.5" fill="#c8482c"/></svg>
+</div>
 
 <header class="topbar" id="topbar">
 <a href="#" class="logo">milt</a>
@@ -210,8 +286,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 <a href="#contacts">Контакты</a>
 <a href="#services">Услуги</a>
 <a href="#achievements">Достижения</a>
+<a href="#doodles">Каракули</a>
 <a href="#notes">Заметки</a>
-<a href="#now">Сейчас</a>
 </nav>
 <div class="top-meta">
 <div class="time-display"><span class="dot"></span><span id="timeText">--:--</span></div>
@@ -236,7 +312,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 <section class="section" id="contacts">
 <div class="section-header">
 <div class="section-num">01</div>
-<h2 class="section-title">Связаться <em>со мной</em></h2>
+<h2 class="section-title">Связаться <em>со мной</em><svg class="doodle-line" viewBox="0 0 120 8"><path d="M2,4 Q30,1 60,4 T118,4"/></svg></h2>
 <div class="section-meta">Выберите канал</div>
 </div>
 <div class="contacts">
@@ -244,28 +320,19 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 <div class="contact-num">01 / Telegram</div>
 <div class="contact-platform">Telegram</div>
 <div class="contact-handle">@t1kga</div>
-<div class="contact-bottom">
-<button class="contact-copy" data-copy="@t1kga">Скопировать →</button>
-<span class="contact-arrow">↗</span>
-</div>
+<div class="contact-bottom"><button class="contact-copy" data-copy="@t1kga">Скопировать →</button><span class="contact-arrow">↗</span></div>
 </a>
 <a href="https://discord.com/users/1395875223626186884" target="_blank" rel="noopener" class="contact">
 <div class="contact-num">02 / Discord</div>
 <div class="contact-platform">Discord</div>
 <div class="contact-handle">1395875223626186884</div>
-<div class="contact-bottom">
-<button class="contact-copy" data-copy="1395875223626186884">Скопировать →</button>
-<span class="contact-arrow">↗</span>
-</div>
+<div class="contact-bottom"><button class="contact-copy" data-copy="1395875223626186884">Скопировать →</button><span class="contact-arrow">↗</span></div>
 </a>
 <a href="https://funpay.com/users/9761516/" target="_blank" rel="noopener" class="contact">
 <div class="contact-num">03 / FunPay</div>
 <div class="contact-platform">FunPay</div>
 <div class="contact-handle">funpay.com/users/9761516</div>
-<div class="contact-bottom">
-<button class="contact-copy" data-copy="https://funpay.com/users/9761516/">Скопировать →</button>
-<span class="contact-arrow">↗</span>
-</div>
+<div class="contact-bottom"><button class="contact-copy" data-copy="https://funpay.com/users/9761516/">Скопировать →</button><span class="contact-arrow">↗</span></div>
 </a>
 </div>
 </section>
@@ -274,7 +341,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 <section class="section" id="services">
 <div class="section-header">
 <div class="section-num">02</div>
-<h2 class="section-title">Что я <em>делаю</em></h2>
+<h2 class="section-title">Что я <em>делаю</em><svg class="doodle-line" viewBox="0 0 120 8"><path d="M2,4 Q30,1 60,4 T118,4"/></svg></h2>
 <div class="section-meta">Четыре направления</div>
 </div>
 <div class="services">
@@ -309,55 +376,37 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 <section class="section" id="achievements">
 <div class="section-header">
 <div class="section-num">03</div>
-<h2 class="section-title">Что <em>достиг</em></h2>
+<h2 class="section-title">Что <em>достиг</em><svg class="doodle-line" viewBox="0 0 120 8"><path d="M2,4 Q30,1 60,4 T118,4"/></svg></h2>
 <div class="section-meta">Цифры и факты</div>
 </div>
 <div class="achievements">
 <div class="achievement">
-<div class="achievement-mark">
-<span class="achievement-num">01</span>
-<span class="achievement-index">/ Start</span>
-</div>
+<div class="achievement-mark"><span class="achievement-num">01</span><span class="achievement-index">/ Start</span></div>
 <h3 class="achievement-title">Первый проект</h3>
 <p class="achievement-desc">Сделал сайт-визитку за три дня. Понял, что верстать — это моё.</p>
 </div>
 <div class="achievement">
-<div class="achievement-mark">
-<span class="achievement-num">50</span>
-<span class="achievement-index">/ Clients</span>
-</div>
+<div class="achievement-mark"><span class="achievement-num">50</span><span class="achievement-index">/ Clients</span></div>
 <h3 class="achievement-title">Заказов выполнено</h3>
 <p class="achievement-desc">Сайты, боты, консультации. Каждый — с вниманием к деталям.</p>
 </div>
 <div class="achievement">
-<div class="achievement-mark">
-<span class="achievement-num">4</span>
-<span class="achievement-index">/ Years</span>
-</div>
+<div class="achievement-mark"><span class="achievement-num">4</span><span class="achievement-index">/ Years</span></div>
 <h3 class="achievement-title">Года опыта</h3>
 <p class="achievement-desc">От HTML-таблиц до 3D-трансформаций и анимаций на чистом CSS.</p>
 </div>
 <div class="achievement">
-<div class="achievement-mark">
-<span class="achievement-num">∞</span>
-<span class="achievement-index">/ Ideas</span>
-</div>
+<div class="achievement-mark"><span class="achievement-num">∞</span><span class="achievement-index">/ Ideas</span></div>
 <h3 class="achievement-title">Идей в голове</h3>
 <p class="achievement-desc">Всегда есть, что попробовать. Новые проекты, эксперименты, форматы.</p>
 </div>
 <div class="achievement">
-<div class="achievement-mark">
-<span class="achievement-num">24</span>
-<span class="achievement-index">/ 7</span>
-</div>
+<div class="achievement-mark"><span class="achievement-num">24</span><span class="achievement-index">/ 7</span></div>
 <h3 class="achievement-title">На связи</h3>
 <p class="achievement-desc">Telegram, Discord, FunPay. Отвечаю быстро, даже если занят.</p>
 </div>
 <div class="achievement">
-<div class="achievement-mark">
-<span class="achievement-num">100%</span>
-<span class="achievement-index">/ Quality</span>
-</div>
+<div class="achievement-mark"><span class="achievement-num">100%</span><span class="achievement-index">/ Quality</span></div>
 <h3 class="achievement-title">Внимание к коду</h3>
 <p class="achievement-desc">Чистый HTML, CSS и JS. Без библиотек, без «тяжёлых» шаблонов.</p>
 </div>
@@ -365,29 +414,69 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 </section>
 
 <div class="section-divider"></div>
+<section class="doodles-section" id="doodles">
+<div class="doodles-header">
+<div class="section-num" style="display:inline-block;margin-bottom:16px">04</div>
+<h2 class="section-title" style="text-align:center;font-size:clamp(40px,5.5vw,80px)">Каракули <em>на полях</em></h2>
+</div>
+<div class="doodles-grid">
+<div class="doodle-sticker">
+<div class="sticker-hand">привет 👋</div>
+<div class="sticker-text">Меня зовут милт. Я делаю сайты и иногда рисую в блокноте.</div>
+<div class="sticker-meta">— заметка №1</div>
+</div>
+<div class="doodle-sticker">
+<div class="sticker-hand">идея</div>
+<div class="sticker-text">Если сайт можно сделать проще — сделай проще. Потом усложнишь.</div>
+<div class="sticker-meta">— заметка №2</div>
+</div>
+<div class="doodle-sticker">
+<div class="sticker-hand">важно</div>
+<div class="sticker-text">Типографика важнее картинок. Правда. Проверено.</div>
+<div class="sticker-meta">— заметка №3</div>
+</div>
+<div class="doodle-sticker">
+<div class="sticker-hand">вопрос</div>
+<div class="sticker-text">А что если убрать всё лишнее? Останется главное.</div>
+<div class="sticker-meta">— заметка №4</div>
+</div>
+<div class="doodle-sticker">
+<div class="sticker-hand">совет</div>
+<div class="sticker-text">Не бойся пустого места. Оно тоже часть дизайна.</div>
+<div class="sticker-meta">— заметка №5</div>
+</div>
+<div class="doodle-sticker">
+<div class="sticker-hand">итог</div>
+<div class="sticker-text">Хороший сайт — это когда всё на своём месте.</div>
+<div class="sticker-meta">— заметка №6</div>
+</div>
+</div>
+</section>
+
+<div class="section-divider"></div>
 <section class="section" id="notes">
 <div class="section-header">
-<div class="section-num">04</div>
-<h2 class="section-title">Заметки <em>на полях</em></h2>
+<div class="section-num">05</div>
+<h2 class="section-title">Заметки <em>в блокноте</em><svg class="doodle-line" viewBox="0 0 120 8"><path d="M2,4 Q30,1 60,4 T118,4"/></svg></h2>
 <div class="section-meta">Мысли вслух</div>
 </div>
 <div class="notes">
 <div class="note">
 <div class="note-date">04 / 2026</div>
 <h3 class="note-title">«Простота — это долго»</h3>
-<p class="note-text">Хороший дизайн выглядит так, будто его сделали за час. На самом деле за ним — десятки итераций и переписанных блоков. Простота — это результат, а не отправная точка.</p>
+<p class="note-text">Хороший дизайн выглядит так, будто его сделали за час. На самом деле за ним — десятки итераций. Простота — это результат, а не отправная точка.</p>
 <div class="note-meta">— Дизайн</div>
 </div>
 <div class="note">
 <div class="note-date">03 / 2026</div>
 <h3 class="note-title">Про типографику</h3>
-<p class="note-text">Шрифт — это 80% дизайна. Можно не рисовать ни одной иллюстрации, но если типографика настроена — страница уже работает. Размер, интерлиньяж, трекинг — три кита.</p>
+<p class="note-text">Шрифт — это 80% дизайна. Можно не рисовать ни одной иллюстрации, но если типографика настроена — страница уже работает.</p>
 <div class="note-meta">— Типографика</div>
 </div>
 <div class="note">
 <div class="note-date">02 / 2026</div>
 <h3 class="note-title">Зачем нужны паузы</h3>
-<p class="note-text">Пустое пространство — это не «незаполненное место». Это воздух, которым дышит контент. Если убрать паузы — даже гениальный текст превратится в кашу.</p>
+<p class="note-text">Пустое пространство — это не «незаполненное место». Это воздух, которым дышит контент. Уберите паузы — и текст превратится в кашу.</p>
 <div class="note-meta">— Пространство</div>
 </div>
 </div>
@@ -396,24 +485,18 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 <div class="section-divider"></div>
 <section class="section" id="now">
 <div class="section-header">
-<div class="section-num">05</div>
-<h2 class="section-title">Сейчас <em>в работе</em></h2>
+<div class="section-num">06</div>
+<h2 class="section-title">Сейчас <em>в работе</em><svg class="doodle-line" viewBox="0 0 120 8"><path d="M2,4 Q30,1 60,4 T118,4"/></svg></h2>
 <div class="section-meta">Живой статус</div>
 </div>
 <div class="now-working">
 <div class="work-item">
-<div class="work-header">
-<div class="work-status"><span class="dot"></span>В работе</div>
-<div class="work-num">01</div>
-</div>
+<div class="work-header"><div class="work-status"><span class="dot"></span>В работе</div><div class="work-num">01</div></div>
 <h3 class="work-title">Редизайн портфолио</h3>
 <p class="work-desc">Собираю новый формат портфолио — с акцентом на типографику и минимализм. Сроки: апрель 2026.</p>
 </div>
 <div class="work-item">
-<div class="work-header">
-<div class="work-status"><span class="dot"></span>В работе</div>
-<div class="work-num">02</div>
-</div>
+<div class="work-header"><div class="work-status"><span class="dot"></span>В работе</div><div class="work-num">02</div></div>
 <h3 class="work-title">Telegram-бот для заказов</h3>
 <p class="work-desc">Бот с меню, оплатой и админ-панелью. Стек: Python, aiogram, SQLite. Сроки: май 2026.</p>
 </div>
@@ -423,8 +506,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 <div class="section-divider"></div>
 <section class="section" id="shelf">
 <div class="section-header">
-<div class="section-num">06</div>
-<h2 class="section-title">На <em>полке</em></h2>
+<div class="section-num">07</div>
+<h2 class="section-title">На <em>полке</em><svg class="doodle-line" viewBox="0 0 120 8"><path d="M2,4 Q30,1 60,4 T118,4"/></svg></h2>
 <div class="section-meta">Читаю · слушаю</div>
 </div>
 <div class="shelf">
@@ -478,13 +561,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 <a href="#contacts">Контакты</a>
 <a href="#services">Услуги</a>
 <a href="#achievements">Достижения</a>
-<a href="#notes">Заметки</a>
+<a href="#doodles">Каракули</a>
 </div>
 <div class="footer-col">
 <h4>Ещё</h4>
+<a href="#notes">Заметки</a>
 <a href="#now">Сейчас</a>
 <a href="#shelf">Полка</a>
-<a href="#">Политика</a>
 </div>
 </footer>
 <div class="footer-bottom">
@@ -494,22 +577,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 
 <div class="toast" id="toast">Готово!</div>
 
-<div class="modal-bg" id="adminModal">
-<div class="modal">
-<h3>🔐 Админ-панель</h3>
-<p>Введите пароль для смены аватарки.</p>
-<input type="password" id="adminPass" placeholder="Пароль" autocomplete="off">
-<div class="modal-btns">
-<button id="cancelAdmin">Отмена</button>
-<button class="primary" id="confirmAdmin">Войти</button>
-</div>
-</div>
-</div>
-
 <script>
-var ADMIN_PASSWORD='milt2026';
-
-/* Время + дата */
+/* Время */
 function updateTime(){
 var now=new Date();
 var utc=now.getTime()+now.getTimezoneOffset()*60000;
@@ -522,9 +591,16 @@ document.getElementById('dateText').textContent=days[msk.getDay()]+' '+msk.getDa
 }
 updateTime();setInterval(updateTime,30000);
 
-/* Топбар при скролле */
+/* Топбар */
 window.addEventListener('scroll',function(){
 document.getElementById('topbar').classList.toggle('scrolled',window.scrollY>50);
+});
+
+/* Курсор-карандаш */
+var pencil=document.getElementById('pencil');
+document.addEventListener('mousemove',function(e){
+pencil.style.left=e.clientX+'px';
+pencil.style.top=e.clientY+'px';
 });
 
 /* Reveal */
@@ -533,7 +609,7 @@ entries.forEach(function(e){
 if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}
 });
 },{threshold:0.1});
-document.querySelectorAll('.section, .quote-of-day, .cta').forEach(function(el){
+document.querySelectorAll('.section, .doodles-section, .quote-of-day, .cta').forEach(function(el){
 el.classList.add('reveal');observer.observe(el);
 });
 
