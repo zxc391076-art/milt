@@ -48,7 +48,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 
 /* СЕТКА */
-.page{max-width:1280px;margin:0 auto;padding:100px 20px 80px;display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:20px;position:relative;z-index:1}
+.page{max-width:1400px;margin:0 auto;padding:100px 20px 80px;display:grid;grid-template-columns:1fr 1.1fr 1.3fr;gap:20px;position:relative;z-index:1;align-items:start}
 .card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:26px;backdrop-filter:blur(24px);position:relative;overflow:hidden;box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.04);transition:border-color .4s,box-shadow .4s}
 .card:hover{border-color:rgba(255,42,42,.4);box-shadow:var(--shadow),0 0 40px rgba(255,42,42,.15),inset 0 1px 0 rgba(255,255,255,.06)}
 .card::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,42,42,.4),transparent)}
@@ -76,139 +76,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .online{position:absolute;bottom:5px;right:5px;width:20px;height:20px;border-radius:50%;background:var(--red);border:3px solid var(--bg);box-shadow:0 0 16px var(--red),0 6px 12px rgba(0,0,0,.5);z-index:4;animation:pdot 2s infinite}
 @keyframes pdot{0%,100%{box-shadow:0 0 16px var(--red)}50%{box-shadow:0 0 28px var(--red),0 0 44px var(--red)}}
 
-/* ================= 3D СФЕРА ================= */
-.sphere-card{grid-column:2;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:520px;padding:20px;background:radial-gradient(circle at 50% 45%,rgba(255,42,42,.12),transparent 65%),var(--card);border:1px solid var(--border);border-radius:24px;backdrop-filter:blur(24px);box-shadow:var(--shadow),0 0 60px rgba(255,42,42,.15),inset 0 1px 0 rgba(255,255,255,.04);position:relative;overflow:hidden}
-.sphere-card::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,42,42,.5),transparent)}
-.sphere-label{position:absolute;top:16px;left:50%;transform:translateX(-50%);font-size:9.5px;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;font-weight:600;white-space:nowrap;z-index:5;display:flex;align-items:center;gap:8px}
-.sphere-label::before,.sphere-label::after{content:'';width:18px;height:1px;background:var(--border)}
-
-.sphere-stage{width:280px;height:280px;position:relative;display:grid;place-items:center;cursor:pointer;perspective:1000px}
-.sphere-stage:active{transform:scale(.97)}
-
-/* Сама сфера */
-.sphere{
-position:relative;width:200px;height:200px;border-radius:50%;
-background:
-radial-gradient(circle at 30% 25%, rgba(255,255,255,.6) 0%, transparent 35%),
-radial-gradient(circle at 70% 80%, rgba(255,42,42,.4) 0%, transparent 50%),
-radial-gradient(circle at 50% 50%, #ff3a3a 0%, #c00000 35%, #5a0000 70%, #1a0000 100%);
-box-shadow:
-inset -20px -20px 60px rgba(0,0,0,.7),
-inset 20px 20px 40px rgba(255,255,255,.15),
-0 30px 80px -20px rgba(255,42,42,.6),
-0 0 60px rgba(255,42,42,.3);
-animation:sphereFloat 5s ease-in-out infinite;
-transform-style:preserve-3d;
-will-change:transform;
-z-index:2;
-}
-@keyframes sphereFloat{
-0%,100%{transform:translateY(0) scale(1)}
-50%{transform:translateY(-10px) scale(1.03)}
-}
-
-/* Блик сверху */
-.sphere::before{
-content:'';position:absolute;top:8%;left:18%;width:45%;height:45%;border-radius:50%;
-background:radial-gradient(circle at 40% 40%, rgba(255,255,255,.75) 0%, rgba(255,255,255,.2) 25%, transparent 60%);
-filter:blur(6px);
-pointer-events:none;
-z-index:3;
-}
-
-/* Второй блик снизу (отражение) */
-.sphere::after{
-content:'';position:absolute;bottom:12%;right:15%;width:30%;height:30%;border-radius:50%;
-background:radial-gradient(circle, rgba(255,150,150,.5) 0%, transparent 70%);
-filter:blur(8px);
-pointer-events:none;
-z-index:1;
-}
-
-/* Внутренние частицы */
-.sphere-inner{
-position:absolute;inset:0;border-radius:50%;overflow:hidden;pointer-events:none;z-index:1;
-}
-.sphere-inner .p{
-position:absolute;width:4px;height:4px;border-radius:50%;
-background:rgba(255,220,220,.8);
-box-shadow:0 0 8px rgba(255,150,150,.9);
-animation:innerFloat linear infinite;
-}
-@keyframes innerFloat{
-0%{transform:translate(0,0);opacity:0}
-10%{opacity:1}
-90%{opacity:1}
-100%{transform:translate(var(--dx),var(--dy));opacity:0}
-}
-
-/* Орбита вокруг сферы */
-.orbit{
-position:absolute;width:320px;height:320px;border-radius:50%;
-border:1.5px solid rgba(255,42,42,.25);
-box-shadow:0 0 20px rgba(255,42,42,.2), inset 0 0 20px rgba(255,42,42,.1);
-transform:rotateX(72deg);
-animation:orbitSpin 20s linear infinite;
-pointer-events:none;
-z-index:1;
-}
-.orbit::before{
-content:'';position:absolute;top:-4px;left:50%;width:8px;height:8px;border-radius:50%;
-background:var(--red2);
-box-shadow:0 0 16px var(--red2), 0 0 32px var(--red2);
-transform:translateX(-50%);
-}
-.orbit2{
-position:absolute;width:340px;height:340px;border-radius:50%;
-border:1px solid rgba(255,92,92,.15);
-transform:rotateX(72deg) rotateZ(60deg);
-animation:orbitSpin 30s linear infinite reverse;
-pointer-events:none;
-z-index:0;
-}
-@keyframes orbitSpin{
-from{transform:rotateX(72deg) rotateZ(0deg)}
-to{transform:rotateX(72deg) rotateZ(360deg)}
-}
-.orbit2{animation:orbitSpin2 30s linear infinite reverse}
-@keyframes orbitSpin2{
-from{transform:rotateX(72deg) rotateZ(60deg)}
-to{transform:rotateX(72deg) rotateZ(420deg)}
-}
-
-/* Тень сферы */
-.sphere-shadow{
-position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
-width:180px;height:30px;border-radius:50%;
-background:radial-gradient(ellipse, rgba(255,42,42,.6) 0%, transparent 70%);
-filter:blur(15px);
-animation:shadowPulse 5s ease-in-out infinite;
-z-index:0;
-}
-@keyframes shadowPulse{
-0%,100%{transform:translateX(-50%) scale(1);opacity:.6}
-50%{transform:translateX(-50%) scale(1.1);opacity:.4}
-}
-
-/* Кольцо-пульс при клике */
-.pulse-ring{
-position:absolute;top:50%;left:50%;width:200px;height:200px;
-border-radius:50%;border:2px solid var(--red);
-transform:translate(-50%,-50%);
-animation:pulseOut 1.2s ease-out forwards;
-pointer-events:none;
-z-index:10;
-}
-@keyframes pulseOut{
-0%{transform:translate(-50%,-50%) scale(1);opacity:1;border-width:3px}
-100%{transform:translate(-50%,-50%) scale(2.5);opacity:0;border-width:1px}
-}
-
-.sphere-hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;display:flex;align-items:center;gap:6px;animation:hintP 2s ease-in-out infinite}
-@keyframes hintP{0%,100%{opacity:.3}50%{opacity:.7}}
-
 /* КОНТАКТЫ */
-.contacts{grid-column:3;display:flex;flex-direction:column;gap:12px}
+.contacts{grid-column:2;display:flex;flex-direction:column;gap:12px}
 .section-label{font-size:10.5px;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:2px}
 .contact{position:relative;display:flex;align-items:center;gap:12px;padding:14px 16px;background:linear-gradient(145deg,var(--bg2),var(--card));border:1px solid var(--border);border-radius:18px;text-decoration:none;color:var(--text);box-shadow:0 12px 28px -10px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.04);transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s,border-color .3s;overflow:hidden}
 .contact:hover{border-color:rgba(255,42,42,.5);box-shadow:0 20px 40px -10px rgba(255,42,42,.4),0 0 30px rgba(255,42,42,.2),inset 0 1px 0 rgba(255,255,255,.08);transform:translateX(-3px)}
@@ -228,6 +97,187 @@ z-index:10;
 @keyframes pop{50%{transform:scale(1.25)}}
 .arrow{color:var(--muted);font-size:16px;transition:.3s;z-index:2}
 .contact:hover .arrow{color:var(--red);transform:translateX(4px)}
+
+/* ================= 3D КАРКАСНЫЙ ШАР ================= */
+.sphere-card{
+grid-column:3;display:flex;flex-direction:column;align-items:center;justify-content:center;
+min-height:600px;padding:20px;position:relative;overflow:hidden;
+background:radial-gradient(circle at 50% 45%,rgba(255,42,42,.10),transparent 70%),var(--card);
+border:1px solid var(--border);border-radius:24px;backdrop-filter:blur(24px);
+box-shadow:var(--shadow),0 0 60px rgba(255,42,42,.12),inset 0 1px 0 rgba(255,255,255,.04);
+}
+.sphere-card::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,42,42,.5),transparent)}
+.sphere-label{
+position:absolute;top:16px;left:50%;transform:translateX(-50%);
+font-size:9.5px;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;font-weight:600;
+white-space:nowrap;z-index:5;display:flex;align-items:center;gap:8px;
+}
+.sphere-label::before,.sphere-label::after{content:'';width:18px;height:1px;background:var(--border)}
+
+/* Сцена с перспективой */
+.sphere-stage{
+position:relative;width:340px;height:460px;
+display:flex;align-items:center;justify-content:center;
+perspective:1400px;perspective-origin:50% 50%;
+}
+
+/* Контейнер шара — он будет вращаться */
+.globe-wrap{
+position:relative;width:280px;height:280px;
+transform-style:preserve-3d;
+animation:floatGlobe 6s ease-in-out infinite;
+will-change:transform;
+z-index:3;
+}
+@keyframes floatGlobe{
+0%,100%{transform:translateY(-10px)}
+50%{transform:translateY(10px)}
+}
+
+/* Сам глобус — тут вся 3D-магия */
+.globe{
+position:relative;width:100%;height:100%;
+transform-style:preserve-3d;
+}
+
+/* Ядро — красная полупрозрачная сфера внутри */
+.globe-core{
+position:absolute;top:50%;left:50%;
+width:75%;height:75%;
+transform:translate(-50%,-50%);
+border-radius:50%;
+background:
+radial-gradient(circle at 35% 30%, rgba(255,120,120,.6) 0%, transparent 40%),
+radial-gradient(circle at 50% 50%, #ff2a2a 0%, #a00000 40%, #4a0000 70%, #150000 100%);
+box-shadow:
+inset -20px -20px 50px rgba(0,0,0,.9),
+inset 15px 15px 30px rgba(255,255,255,.12),
+0 0 40px rgba(255,42,42,.6),
+0 0 80px rgba(255,42,42,.3);
+opacity:.85;
+z-index:1;
+}
+
+/* Все линии глобуса */
+.globe-line{
+position:absolute;top:50%;left:50%;
+transform-style:preserve-3d;
+pointer-events:none;
+z-index:2;
+}
+
+/* Меридианы (вертикальные) */
+.meridian{
+position:absolute;top:50%;left:50%;
+width:100%;height:100%;
+transform-style:preserve-3d;
+transform:translate(-50%,-50%);
+border-radius:50%;
+border:1px solid rgba(255,80,80,.6);
+box-shadow:0 0 6px rgba(255,42,42,.4);
+}
+.meridian.highlight{
+border-color:rgba(255,150,150,.9);
+box-shadow:0 0 12px rgba(255,80,80,.7);
+}
+
+/* Параллели (горизонтальные) */
+.parallel{
+position:absolute;top:50%;left:50%;
+transform-style:preserve-3d;
+border-radius:50%;
+border:1px solid rgba(255,60,60,.5);
+box-shadow:0 0 5px rgba(255,42,42,.35);
+}
+
+/* Точки на пересечениях */
+.globe-dot{
+position:absolute;
+width:5px;height:5px;
+border-radius:50%;
+background:#ff5c5c;
+box-shadow:0 0 8px #ff2a2a,0 0 16px #ff2a2a;
+margin:-2.5px 0 0 -2.5px;
+}
+
+/* Внешнее свечение */
+.globe-halo{
+position:absolute;top:50%;left:50%;width:340px;height:340px;
+transform:translate(-50%,-50%);
+border-radius:50%;
+background:radial-gradient(circle, rgba(255,42,42,.2) 0%, transparent 60%);
+filter:blur(20px);
+z-index:0;
+pointer-events:none;
+animation:haloP 4s ease-in-out infinite;
+}
+@keyframes haloP{
+0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}
+50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}
+}
+
+/* Тень на полу */
+.globe-ground-shadow{
+position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+width:200px;height:36px;border-radius:50%;
+background:radial-gradient(ellipse, rgba(255,42,42,.5) 0%, rgba(150,0,0,.2) 30%, transparent 70%);
+filter:blur(18px);
+animation:shadowAnim 6s ease-in-out infinite;
+z-index:1;
+pointer-events:none;
+}
+@keyframes shadowAnim{
+0%,100%{transform:translateX(-50%) scale(1);opacity:.6}
+50%{transform:translateX(-50%) scale(.85);opacity:.35}
+}
+
+/* Кольца-орбиты вокруг глобуса */
+.globe-orbit{
+position:absolute;top:50%;left:50%;
+width:360px;height:360px;
+border-radius:50%;
+border:1px solid rgba(255,42,42,.15);
+transform:translate(-50%,-50%) rotateX(78deg);
+box-shadow:0 0 15px rgba(255,42,42,.1);
+animation:orbitSpin 25s linear infinite;
+pointer-events:none;
+z-index:0;
+}
+.globe-orbit::before{
+content:'';position:absolute;top:-3px;left:50%;
+width:6px;height:6px;border-radius:50%;
+background:#ff5c5c;
+box-shadow:0 0 12px #ff5c5c,0 0 24px #ff5c5c;
+transform:translateX(-50%);
+}
+@keyframes orbitSpin{
+from{transform:translate(-50%,-50%) rotateX(78deg) rotateZ(0deg)}
+to{transform:translate(-50%,-50%) rotateX(78deg) rotateZ(360deg)}
+}
+
+/* Пульс при клике */
+.pulse-ring{
+position:absolute;top:50%;left:50%;
+width:280px;height:280px;
+border-radius:50%;
+border:2px solid var(--red);
+transform:translate(-50%,-50%);
+animation:pulseOut 1.4s ease-out forwards;
+pointer-events:none;
+z-index:10;
+}
+@keyframes pulseOut{
+0%{transform:translate(-50%,-50%) scale(1);opacity:1;border-width:3px}
+100%{transform:translate(-50%,-50%) scale(2.2);opacity:0;border-width:1px}
+}
+
+.sphere-hint{
+position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;
+white-space:nowrap;display:flex;align-items:center;gap:6px;
+animation:hintP 2s ease-in-out infinite;z-index:5;
+}
+@keyframes hintP{0%,100%{opacity:.3}50%{opacity:.7}}
 
 /* НИЗ */
 .bottom-bar{grid-column:1 / span 3;display:flex;gap:10px;margin-top:4px}
@@ -263,10 +313,10 @@ z-index:10;
 .confetti{position:fixed;width:9px;height:9px;pointer-events:none;z-index:999;animation:cf linear forwards;box-shadow:0 2px 5px rgba(255,42,42,.5)}
 @keyframes cf{to{transform:translateY(100vh) rotate(720deg);opacity:0}}
 
-/* Всплеск энергии при клике на сферу */
+/* Всплеск энергии */
 .energy-burst{
-position:fixed;top:50%;left:50%;width:10px;height:10px;
-border-radius:50%;background:radial-gradient(circle, rgba(255,42,42,.8), transparent 70%);
+position:fixed;width:10px;height:10px;border-radius:50%;
+background:radial-gradient(circle, rgba(255,42,42,.8), transparent 70%);
 pointer-events:none;z-index:999;
 animation:burstOut 1s ease-out forwards;
 }
@@ -276,11 +326,72 @@ animation:burstOut 1s ease-out forwards;
 }
 
 /* АДАПТИВ */
-@media(max-width:1100px){.page{grid-template-columns:1fr 1.1fr;padding:90px 18px 70px}.profile{grid-column:1}.sphere-card{grid-column:2;grid-row:1 / span 2;min-height:auto}.contacts{grid-column:1}.bottom-bar{grid-column:1 / span 2}}
-@media(max-width:760px){.page{grid-template-columns:1fr;padding:85px 14px 70px;gap:14px}.profile{grid-row:auto;padding:22px 18px;gap:16px;align-items:center;text-align:center}.sphere-card{grid-row:auto;grid-column:1;min-height:400px;padding:16px}.contacts{grid-row:auto;padding:18px 14px;gap:10px}.bottom-bar{grid-column:1;flex-direction:column;gap:8px}.avatar-wrap{width:95px;height:95px;margin:0 auto}.title{font-size:clamp(30px,9vw,42px)}.greeting{justify-content:center}.desc{text-align:center;font-size:12px}.topbar{padding:10px 12px}.clock{font-size:13px;padding:7px 12px;gap:6px}.clock .msk{display:none}.clock svg{width:13px;height:13px}.logo{font-size:16px}.icon-btn{width:32px;height:32px}.icon-btn svg{width:14px;height:14px}.contact{padding:12px 13px;gap:10px;border-radius:16px}.contact .ico{width:36px;height:36px;border-radius:10px}.contact .ico svg{width:18px;height:18px}.contact-name{font-size:13px}.contact-handle{font-size:9px}.mini-btn{width:28px;height:28px}.mini-btn svg{width:12px;height:12px}.action-btn{padding:12px;font-size:12px}.footer{font-size:8px;bottom:10px}.toast{bottom:70px;font-size:11.5px;padding:10px 16px}.milt-txt{font-size:clamp(70px,16vw,120px)}.milt-txt.t2{display:none}.sphere-stage{width:220px;height:220px}.sphere{width:160px;height:160px}.orbit{width:260px;height:260px}.orbit2{width:280px;height:280px}.sphere-shadow{width:140px;height:24px;bottom:20px}}
-@media(max-width:400px){.page{padding:80px 10px 65px}.profile{padding:18px 14px}.contacts{padding:14px 12px}.title{font-size:clamp(26px,8vw,36px)}.clock{font-size:11.5px;padding:6px 10px}.contact{padding:10px 11px}.action-btn{font-size:11px;padding:11px}.sphere-stage{width:200px;height:200px}.sphere{width:140px;height:140px}.orbit{width:230px;height:230px}.orbit2{width:250px;height:250px}.sphere-shadow{width:120px;height:20px}}
-@media(hover:none){.contact:hover{transform:none}.contact:hover .ico{transform:none}.action-btn:hover{transform:none}.icon-btn:hover{transform:none}.card:hover{transform:none}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media(max-width:1200px){
+.page{grid-template-columns:1fr 1fr;padding:90px 18px 70px}
+.profile{grid-column:1}
+.contacts{grid-column:2;grid-row:1}
+.sphere-card{grid-column:1 / span 2;grid-row:2;min-height:560px}
+.bottom-bar{grid-column:1 / span 2}
+}
+@media(max-width:760px){
+.page{grid-template-columns:1fr;padding:85px 14px 70px;gap:14px}
+.profile{grid-row:auto;padding:22px 18px;gap:16px;align-items:center;text-align:center}
+.contacts{grid-row:auto;grid-column:1;padding:18px 14px;gap:10px}
+.sphere-card{grid-row:auto;grid-column:1;min-height:480px;padding:16px}
+.bottom-bar{grid-column:1;flex-direction:column;gap:8px}
+.avatar-wrap{width:95px;height:95px;margin:0 auto}
+.title{font-size:clamp(30px,9vw,42px)}
+.greeting{justify-content:center}
+.desc{text-align:center;font-size:12px}
+.topbar{padding:10px 12px}
+.clock{font-size:13px;padding:7px 12px;gap:6px}
+.clock .msk{display:none}
+.clock svg{width:13px;height:13px}
+.logo{font-size:16px}
+.icon-btn{width:32px;height:32px}
+.icon-btn svg{width:14px;height:14px}
+.contact{padding:12px 13px;gap:10px;border-radius:16px}
+.contact .ico{width:36px;height:36px;border-radius:10px}
+.contact .ico svg{width:18px;height:18px}
+.contact-name{font-size:13px}
+.contact-handle{font-size:9px}
+.mini-btn{width:28px;height:28px}
+.mini-btn svg{width:12px;height:12px}
+.action-btn{padding:12px;font-size:12px}
+.footer{font-size:8px;bottom:10px}
+.toast{bottom:70px;font-size:11.5px;padding:10px 16px}
+.milt-txt{font-size:clamp(70px,16vw,120px)}
+.milt-txt.t2{display:none}
+.sphere-stage{width:280px;height:380px}
+.globe-wrap{width:220px;height:220px}
+.globe-halo{width:280px;height:280px}
+.globe-orbit{width:290px;height:290px}
+.globe-ground-shadow{width:160px;height:28px;bottom:14px}
+}
+@media(max-width:400px){
+.page{padding:80px 10px 65px}
+.profile{padding:18px 14px}
+.contacts{padding:14px 12px}
+.title{font-size:clamp(26px,8vw,36px)}
+.clock{font-size:11.5px;padding:6px 10px}
+.contact{padding:10px 11px}
+.action-btn{font-size:11px;padding:11px}
+.sphere-stage{width:250px;height:340px}
+.globe-wrap{width:190px;height:190px}
+.globe-halo{width:240px;height:240px}
+.globe-orbit{width:250px;height:250px}
+.globe-ground-shadow{width:140px;height:22px;bottom:10px}
+}
+@media(hover:none){
+.contact:hover{transform:none}
+.contact:hover .ico{transform:none}
+.action-btn:hover{transform:none}
+.icon-btn:hover{transform:none}
+.card:hover{transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+*,*::before,*::after{animation:none!important;transition:none!important}
+}
 </style>
 </head>
 <body>
@@ -327,20 +438,6 @@ animation:burstOut 1s ease-out forwards;
 <div class="status"><span class="dot"></span> Available for chat</div>
 </section>
 
-<!-- 3D СФЕРА -->
-<section class="sphere-card" id="sphereCard">
-<div class="sphere-label">// milt core</div>
-<div class="sphere-stage" id="sphereStage">
-<div class="orbit"></div>
-<div class="orbit2"></div>
-<div class="sphere" id="sphere">
-<div class="sphere-inner" id="sphereInner"></div>
-</div>
-<div class="sphere-shadow"></div>
-</div>
-<div class="sphere-hint">← двигай · кликни →</div>
-</section>
-
 <section class="card contacts">
 <div class="section-label">// способы связи</div>
 
@@ -364,6 +461,22 @@ animation:burstOut 1s ease-out forwards;
 <button class="mini-btn copy-btn" data-copy="https://funpay.com/users/9761516/" title="Копировать"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button>
 <span class="arrow">→</span>
 </a>
+</section>
+
+<!-- 3D КАРКАСНЫЙ ШАР -->
+<section class="sphere-card" id="sphereCard">
+<div class="sphere-label">// milt core · 3D</div>
+<div class="sphere-stage" id="sphereStage">
+<div class="globe-halo"></div>
+<div class="globe-orbit"></div>
+<div class="globe-ground-shadow" id="groundShadow"></div>
+<div class="globe-wrap" id="globeWrap">
+<div class="globe" id="globe">
+<div class="globe-core"></div>
+</div>
+</div>
+</div>
+<div class="sphere-hint">← вращай · кликни →</div>
 </section>
 
 <div class="bottom-bar">
@@ -395,10 +508,87 @@ animation:burstOut 1s ease-out forwards;
 <script>
 var ADMIN_PASSWORD='milt2026';
 
-/* ===== 3D СФЕРА: вращение за курсором ===== */
-var sphere=document.getElementById('sphere');
-var sphereStage=document.getElementById('sphereStage');
+/* ===== ГЕНЕРАЦИЯ 3D-ГЛОБУСА ===== */
+(function buildGlobe(){
+var globe=document.getElementById('globe');
+var RADIUS=140; /* радиус сферы */
+
+/* Меридианы — вертикальные линии, повёрнутые вокруг Y */
+var NUM_MERIDIANS=12;
+for(var i=0;i<NUM_MERIDIANS;i++){
+var angle=(180/NUM_MERIDIANS)*i;
+var meridian=document.createElement('div');
+meridian.className='meridian';
+meridian.style.transform='translate(-50%,-50%) rotateY('+angle+'deg)';
+/* подсветка переднего меридиана */
+if(i===0||i===NUM_MERIDIANS-1){
+meridian.classList.add('highlight');
+}
+globe.appendChild(meridian);
+}
+
+/* Параллели — горизонтальные кольца на разной высоте */
+var latitudes=[
+{lat:0,size:1.0},      /* экватор */
+{lat:30,size:0.87},
+{lat:60,size:0.5},
+{lat:-30,size:0.87},
+{lat:-60,size:0.5},
+{lat:20,size:0.94},
+{lat:-20,size:0.94},
+{lat:45,size:0.7},
+{lat:-45,size:0.7}
+];
+
+latitudes.forEach(function(lat){
+var ring=document.createElement('div');
+ring.className='parallel';
+var w=RADIUS*2*lat.size;
+var h=RADIUS*2*lat.size;
+ring.style.width=w+'px';
+ring.style.height=h+'px';
+var yOffset=-Math.sin(lat.lat*Math.PI/180)*RADIUS;
+ring.style.transform='translate(-50%,-50%) translateY('+yOffset+'px) rotateX(90deg)';
+/* яркость: экватор ярче, полюса тусклее */
+var brightness=1-Math.abs(lat.lat)/100;
+ring.style.opacity=0.3+brightness*0.6;
+if(lat.lat===0){
+ring.style.borderColor='rgba(255,100,100,.8)';
+ring.style.boxShadow='0 0 10px rgba(255,42,42,.5)';
+}
+globe.appendChild(ring);
+});
+
+/* Точки на пересечениях меридианов и параллелей */
+var intersections=[
+{lat:0,longs:[0,30,60,90,120,150]},
+{lat:30,longs:[0,45,90,135]},
+{lat:-30,longs:[0,45,90,135]},
+{lat:60,longs:[0,60,120]},
+{lat:-60,longs:[0,60,120]}
+];
+intersections.forEach(function(row){
+var y=-Math.sin(row.lat*Math.PI/180)*RADIUS;
+var r=Math.cos(row.lat*Math.PI/180)*RADIUS;
+row.longs.forEach(function(long){
+var x=Math.sin(long*Math.PI/180)*r;
+var z=Math.cos(long*Math.PI/180)*r;
+var dot=document.createElement('div');
+dot.className='globe-dot';
+dot.style.left='calc(50% + '+x+'px)';
+dot.style.top='calc(50% + '+y+'px)';
+dot.style.transform='translateZ('+z+'px)';
+dot.style.opacity=0.7;
+globe.appendChild(dot);
+});
+});
+})();
+
+/* ===== ВРАЩЕНИЕ ===== */
+var globe=document.getElementById('globe');
+var globeWrap=document.getElementById('globeWrap');
 var sphereCard=document.getElementById('sphereCard');
+var groundShadow=document.getElementById('groundShadow');
 var tRotY=0,tRotX=0,cRotY=0,cRotX=0;
 var lastMove=Date.now();
 
@@ -406,60 +596,50 @@ sphereCard.addEventListener('mousemove',function(e){
 var r=sphereCard.getBoundingClientRect();
 var x=(e.clientX-r.left)/r.width-0.5;
 var y=(e.clientY-r.top)/r.height-0.5;
-tRotY=x*40;
-tRotX=-y*30;
+tRotY=x*180;
+tRotX=-y*90;
 lastMove=Date.now();
 });
 sphereCard.addEventListener('mouseleave',function(){
 tRotY=0;tRotX=0;
 });
 
-function animateSphere(){
+function animateGlobe(){
 var idle=Date.now()-lastMove>2000;
-var idleY=idle?Math.sin(Date.now()/1800)*8:0;
-var idleX=idle?Math.cos(Date.now()/2000)*5:0;
+/* в idle глобус медленно вращается сам */
+var idleY=idle?Date.now()/50:0;
 cRotY+=(tRotY+idleY-cRotY)*0.08;
-cRotX+=(tRotX+idleX-cRotX)*0.08;
-sphere.style.transform='rotateY('+cRotY+'deg) rotateX('+cRotX+'deg) translateY('+(idle?Math.sin(Date.now()/1500)*3:0)+'px)';
-requestAnimationFrame(animateSphere);
-}
-animateSphere();
+cRotX+=(tRotX-cRotX)*0.08;
 
-/* гироскоп */
+globe.style.transform='rotateX('+cRotX+'deg) rotateY('+cRotY+'deg)';
+
+/* тень сдвигается в противоположную сторону */
+if(groundShadow){
+var sh=-cRotY*0.15;
+groundShadow.style.transform='translateX(calc(-50% + '+sh+'px))';
+}
+
+requestAnimationFrame(animateGlobe);
+}
+animateGlobe();
+
+/* гироскоп на телефоне */
 if(window.DeviceOrientationEvent){
 window.addEventListener('deviceorientation',function(e){
 if(e.gamma!==null){
-tRotY=Math.max(-30,Math.min(30,e.gamma));
-tRotX=-Math.max(-20,Math.min(20,e.beta-45));
+tRotY=Math.max(-90,Math.min(90,e.gamma*2));
+tRotX=Math.max(-45,Math.min(45,-(e.beta-45)*2));
 }
 });
 }
 
-/* Внутренние частицы */
-(function(){
-var inner=document.getElementById('sphereInner');
-for(var i=0;i<15;i++){
-var p=document.createElement('div');
-p.className='p';
-p.style.left=Math.random()*100+'%';
-p.style.top=Math.random()*100+'%';
-var dx=(Math.random()-0.5)*80;
-var dy=(Math.random()-0.5)*80;
-p.style.setProperty('--dx',dx+'px');
-p.style.setProperty('--dy',dy+'px');
-p.style.animationDuration=(3+Math.random()*4)+'s';
-p.style.animationDelay=Math.random()*3+'s';
-p.style.opacity=0.3+Math.random()*0.5;
-inner.appendChild(p);
-}
-})();
-
-/* Клик по сфере — пульс + всплеск энергии */
+/* Клик — пульс */
+var sphereStage=document.getElementById('sphereStage');
 sphereStage.addEventListener('click',function(e){
 var ring=document.createElement('div');
 ring.className='pulse-ring';
 sphereStage.appendChild(ring);
-setTimeout(function(){ring.remove()},1300);
+setTimeout(function(){ring.remove()},1500);
 
 var burst=document.createElement('div');
 burst.className='energy-burst';
