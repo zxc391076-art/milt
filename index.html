@@ -48,7 +48,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 
 /* СЕТКА */
-.page{max-width:1280px;margin:0 auto;padding:100px 20px 80px;display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:20px;position:relative;z-index:1}
+.page{max-width:1280px;margin:0 auto;padding:100px 20px 80px;display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:20px;position:relative;z-index:1}
 .card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:26px;backdrop-filter:blur(24px);position:relative;overflow:hidden;box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.04);transition:border-color .4s,box-shadow .4s}
 .card:hover{border-color:rgba(255,42,42,.4);box-shadow:var(--shadow),0 0 40px rgba(255,42,42,.15),inset 0 1px 0 rgba(255,255,255,.06)}
 .card::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,42,42,.4),transparent)}
@@ -65,8 +65,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .status .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 2s infinite}
 
 /* АВАТАР */
-.avatar-wrap{position:relative;width:110px;height:110px;animation:fl 6s ease-in-out infinite;margin-bottom:4px;perspective:800px}
-@keyframes fl{0%,100%{transform:translateY(0) rotateY(0)}50%{transform:translateY(-6px) rotateY(10deg)}}
+.avatar-wrap{position:relative;width:110px;height:110px;animation:fl 6s ease-in-out infinite;margin-bottom:4px}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .avatar-ring{position:absolute;inset:-7px;border-radius:50%;background:conic-gradient(from 0deg,var(--red),var(--red2),var(--red3),var(--red));animation:spin 6s linear infinite;filter:blur(5px);opacity:.9}
 @keyframes spin{to{transform:rotate(360deg)}}
 .avatar{position:relative;width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--red3));display:grid;place-items:center;font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:44px;color:#fff;overflow:hidden;background-size:cover;background-position:center;background-image:url('avatar.jpg');z-index:2;cursor:pointer;user-select:none;box-shadow:0 20px 40px -10px rgba(255,42,42,.6),inset 0 4px 8px rgba(255,255,255,.2),inset 0 -6px 12px rgba(0,0,0,.4);transition:transform .4s;animation:aura 3s ease-in-out infinite}
@@ -76,50 +76,135 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .online{position:absolute;bottom:5px;right:5px;width:20px;height:20px;border-radius:50%;background:var(--red);border:3px solid var(--bg);box-shadow:0 0 16px var(--red),0 6px 12px rgba(0,0,0,.5);z-index:4;animation:pdot 2s infinite}
 @keyframes pdot{0%,100%{box-shadow:0 0 16px var(--red)}50%{box-shadow:0 0 28px var(--red),0 0 44px var(--red)}}
 
-/* ================= 3D БАНКА ================= */
-.can-card{grid-column:2;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:520px;padding:20px;background:radial-gradient(circle at 50% 45%,rgba(255,42,42,.12),transparent 65%),var(--card);border:1px solid var(--border);border-radius:24px;backdrop-filter:blur(24px);box-shadow:var(--shadow),0 0 60px rgba(255,42,42,.15),inset 0 1px 0 rgba(255,255,255,.04);perspective:1400px;perspective-origin:50% 50%;position:relative;overflow:hidden}
-.can-card::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,42,42,.5),transparent)}
-.can-label{position:absolute;top:16px;left:50%;transform:translateX(-50%);font-size:9.5px;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;font-weight:600;white-space:nowrap;z-index:5;display:flex;align-items:center;gap:8px}
-.can-label::before,.can-label::after{content:'';width:18px;height:1px;background:var(--border)}
+/* ================= 3D СФЕРА ================= */
+.sphere-card{grid-column:2;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:520px;padding:20px;background:radial-gradient(circle at 50% 45%,rgba(255,42,42,.12),transparent 65%),var(--card);border:1px solid var(--border);border-radius:24px;backdrop-filter:blur(24px);box-shadow:var(--shadow),0 0 60px rgba(255,42,42,.15),inset 0 1px 0 rgba(255,255,255,.04);position:relative;overflow:hidden}
+.sphere-card::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,42,42,.5),transparent)}
+.sphere-label{position:absolute;top:16px;left:50%;transform:translateX(-50%);font-size:9.5px;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;font-weight:600;white-space:nowrap;z-index:5;display:flex;align-items:center;gap:8px}
+.sphere-label::before,.sphere-label::after{content:'';width:18px;height:1px;background:var(--border)}
 
-.can-stage{width:200px;height:440px;transform-style:preserve-3d;transform:rotateX(-6deg) rotateY(0deg);transition:transform .1s ease-out;position:relative;will-change:transform}
-.can-stage::after{content:'';position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);width:200px;height:30px;border-radius:50%;background:radial-gradient(ellipse,rgba(255,42,42,.5),transparent 70%);filter:blur(20px);opacity:.6;z-index:-1;transition:transform .2s}
+.sphere-stage{width:280px;height:280px;position:relative;display:grid;place-items:center;cursor:pointer;perspective:1000px}
+.sphere-stage:active{transform:scale(.97)}
 
-.can-cylinder{position:absolute;top:0;left:50%;width:200px;height:440px;transform:translateX(-50%);transform-style:preserve-3d}
-.seg{position:absolute;top:0;height:440px;transform-origin:center center;border-radius:2px;box-shadow:inset 0 0 30px rgba(0,0,0,.4)}
+/* Сама сфера */
+.sphere{
+position:relative;width:200px;height:200px;border-radius:50%;
+background:
+radial-gradient(circle at 30% 25%, rgba(255,255,255,.6) 0%, transparent 35%),
+radial-gradient(circle at 70% 80%, rgba(255,42,42,.4) 0%, transparent 50%),
+radial-gradient(circle at 50% 50%, #ff3a3a 0%, #c00000 35%, #5a0000 70%, #1a0000 100%);
+box-shadow:
+inset -20px -20px 60px rgba(0,0,0,.7),
+inset 20px 20px 40px rgba(255,255,255,.15),
+0 30px 80px -20px rgba(255,42,42,.6),
+0 0 60px rgba(255,42,42,.3);
+animation:sphereFloat 5s ease-in-out infinite;
+transform-style:preserve-3d;
+will-change:transform;
+z-index:2;
+}
+@keyframes sphereFloat{
+0%,100%{transform:translateY(0) scale(1)}
+50%{transform:translateY(-10px) scale(1.03)}
+}
 
-/* плечи */
-.shoulder{position:absolute;left:50%;transform:translateX(-50%);transform-style:preserve-3d}
-.shoulder.top{top:-2px}
-.shoulder.bottom{bottom:-2px}
+/* Блик сверху */
+.sphere::before{
+content:'';position:absolute;top:8%;left:18%;width:45%;height:45%;border-radius:50%;
+background:radial-gradient(circle at 40% 40%, rgba(255,255,255,.75) 0%, rgba(255,255,255,.2) 25%, transparent 60%);
+filter:blur(6px);
+pointer-events:none;
+z-index:3;
+}
 
-/* крышка */
-.can-lid{position:absolute;top:-10px;left:50%;width:200px;height:22px;transform:translateX(-50%) rotateX(90deg);transform-origin:center top;border-radius:50%;background:radial-gradient(circle at 50% 40%,#e8e8e8 0%,#b8b8b8 30%,#888 60%,#444 100%);box-shadow:inset 0 0 25px rgba(0,0,0,.6),0 2px 8px rgba(0,0,0,.5);z-index:20}
-.can-lid-inner{position:absolute;top:-18px;left:50%;width:170px;height:18px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle at 50% 40%,#d8d8d8,#a8a8a8 40%,#666 100%);border:1px solid rgba(255,255,255,.2);box-shadow:inset 0 2px 6px rgba(0,0,0,.5);z-index:19}
-.pull-tab{position:absolute;top:-16px;left:50%;width:40px;height:20px;transform:translateX(-50%);border-radius:50% / 60%;background:linear-gradient(180deg,#c8c8c8,#888,#555);box-shadow:inset 0 2px 4px rgba(255,255,255,.5),inset 0 -2px 4px rgba(0,0,0,.5),0 1px 3px rgba(0,0,0,.6);z-index:21}
-.pull-tab::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:20px;height:6px;border-radius:50%;background:#333;box-shadow:inset 0 1px 2px rgba(0,0,0,.8),0 1px 1px rgba(255,255,255,.3)}
-.lid-ring{position:absolute;top:-14px;left:50%;width:160px;height:14px;transform:translateX(-50%);border-radius:50%;border:2px solid #999;box-shadow:0 0 6px rgba(0,0,0,.5);z-index:22}
+/* Второй блик снизу (отражение) */
+.sphere::after{
+content:'';position:absolute;bottom:12%;right:15%;width:30%;height:30%;border-radius:50%;
+background:radial-gradient(circle, rgba(255,150,150,.5) 0%, transparent 70%);
+filter:blur(8px);
+pointer-events:none;
+z-index:1;
+}
 
-/* дно */
-.can-bottom{position:absolute;bottom:-10px;left:50%;width:200px;height:22px;transform:translateX(-50%) rotateX(90deg);transform-origin:center bottom;border-radius:50%;background:radial-gradient(circle at 50% 60%,#666 0%,#444 40%,#222 80%,#111 100%);box-shadow:inset 0 0 30px rgba(0,0,0,.8),inset 0 4px 8px rgba(255,255,255,.1);z-index:20}
+/* Внутренние частицы */
+.sphere-inner{
+position:absolute;inset:0;border-radius:50%;overflow:hidden;pointer-events:none;z-index:1;
+}
+.sphere-inner .p{
+position:absolute;width:4px;height:4px;border-radius:50%;
+background:rgba(255,220,220,.8);
+box-shadow:0 0 8px rgba(255,150,150,.9);
+animation:innerFloat linear infinite;
+}
+@keyframes innerFloat{
+0%{transform:translate(0,0);opacity:0}
+10%{opacity:1}
+90%{opacity:1}
+100%{transform:translate(var(--dx),var(--dy));opacity:0}
+}
 
-/* блики */
-.shine{position:absolute;top:0;left:50%;width:200px;height:440px;transform:translateX(-50%);pointer-events:none;z-index:15;border-radius:2px;overflow:hidden}
-.shine::before{content:'';position:absolute;top:0;left:18%;width:14px;height:100%;background:linear-gradient(180deg,transparent,rgba(255,255,255,.45) 20%,rgba(255,255,255,.5) 50%,rgba(255,255,255,.45) 80%,transparent);filter:blur(1px)}
-.shine::after{content:'';position:absolute;top:0;left:65%;width:40px;height:100%;background:linear-gradient(180deg,transparent,rgba(255,255,255,.15) 20%,rgba(255,255,255,.2) 50%,rgba(255,255,255,.15) 80%,transparent);filter:blur(4px)}
+/* Орбита вокруг сферы */
+.orbit{
+position:absolute;width:320px;height:320px;border-radius:50%;
+border:1.5px solid rgba(255,42,42,.25);
+box-shadow:0 0 20px rgba(255,42,42,.2), inset 0 0 20px rgba(255,42,42,.1);
+transform:rotateX(72deg);
+animation:orbitSpin 20s linear infinite;
+pointer-events:none;
+z-index:1;
+}
+.orbit::before{
+content:'';position:absolute;top:-4px;left:50%;width:8px;height:8px;border-radius:50%;
+background:var(--red2);
+box-shadow:0 0 16px var(--red2), 0 0 32px var(--red2);
+transform:translateX(-50%);
+}
+.orbit2{
+position:absolute;width:340px;height:340px;border-radius:50%;
+border:1px solid rgba(255,92,92,.15);
+transform:rotateX(72deg) rotateZ(60deg);
+animation:orbitSpin 30s linear infinite reverse;
+pointer-events:none;
+z-index:0;
+}
+@keyframes orbitSpin{
+from{transform:rotateX(72deg) rotateZ(0deg)}
+to{transform:rotateX(72deg) rotateZ(360deg)}
+}
+.orbit2{animation:orbitSpin2 30s linear infinite reverse}
+@keyframes orbitSpin2{
+from{transform:rotateX(72deg) rotateZ(60deg)}
+to{transform:rotateX(72deg) rotateZ(420deg)}
+}
 
-/* этикетка */
-.label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:96%;height:58%;background:#000;border-top:1.5px solid rgba(255,42,42,.6);border-bottom:1.5px solid rgba(255,42,42,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:inset 0 0 30px rgba(255,42,42,.25)}
-.label .brand{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:30px;letter-spacing:-1.5px;color:var(--red);text-shadow:0 0 16px var(--red),0 0 32px var(--red);line-height:1}
-.label .sub{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:7px;color:var(--red2);margin-top:2px}
-.label .line{width:45%;height:1px;background:rgba(255,42,42,.5);margin:3px 0}
-.label .comp{font-family:'Space Mono',monospace;font-size:5px;letter-spacing:.5px;color:#666;text-align:center;line-height:1.3;padding:0 8px}
-.label .barcode{width:55%;height:14px;background:repeating-linear-gradient(90deg,#fff 0,#fff 1px,#000 1px,#000 2px,#fff 2px,#fff 4px,#000 4px,#000 5px,#fff 5px,#fff 7px,#000 7px,#000 8px);margin-top:2px;opacity:.85}
-.label .vol{font-family:'Space Mono',monospace;font-size:6px;color:#888;position:absolute;bottom:3px;right:6px}
+/* Тень сферы */
+.sphere-shadow{
+position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+width:180px;height:30px;border-radius:50%;
+background:radial-gradient(ellipse, rgba(255,42,42,.6) 0%, transparent 70%);
+filter:blur(15px);
+animation:shadowPulse 5s ease-in-out infinite;
+z-index:0;
+}
+@keyframes shadowPulse{
+0%,100%{transform:translateX(-50%) scale(1);opacity:.6}
+50%{transform:translateX(-50%) scale(1.1);opacity:.4}
+}
 
-/* отражение */
-.can-reflect{position:absolute;bottom:-160px;left:50%;transform:translateX(-50%) scaleY(-1);width:200px;height:150px;opacity:.15;filter:blur(6px);pointer-events:none;z-index:-2;mask-image:linear-gradient(to bottom,black,transparent);-webkit-mask-image:linear-gradient(to bottom,black,transparent)}
-.can-hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;display:flex;align-items:center;gap:6px;animation:hintP 2s ease-in-out infinite}
+/* Кольцо-пульс при клике */
+.pulse-ring{
+position:absolute;top:50%;left:50%;width:200px;height:200px;
+border-radius:50%;border:2px solid var(--red);
+transform:translate(-50%,-50%);
+animation:pulseOut 1.2s ease-out forwards;
+pointer-events:none;
+z-index:10;
+}
+@keyframes pulseOut{
+0%{transform:translate(-50%,-50%) scale(1);opacity:1;border-width:3px}
+100%{transform:translate(-50%,-50%) scale(2.5);opacity:0;border-width:1px}
+}
+
+.sphere-hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;display:flex;align-items:center;gap:6px;animation:hintP 2s ease-in-out infinite}
 @keyframes hintP{0%,100%{opacity:.3}50%{opacity:.7}}
 
 /* КОНТАКТЫ */
@@ -178,12 +263,23 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .confetti{position:fixed;width:9px;height:9px;pointer-events:none;z-index:999;animation:cf linear forwards;box-shadow:0 2px 5px rgba(255,42,42,.5)}
 @keyframes cf{to{transform:translateY(100vh) rotate(720deg);opacity:0}}
 
+/* Всплеск энергии при клике на сферу */
+.energy-burst{
+position:fixed;top:50%;left:50%;width:10px;height:10px;
+border-radius:50%;background:radial-gradient(circle, rgba(255,42,42,.8), transparent 70%);
+pointer-events:none;z-index:999;
+animation:burstOut 1s ease-out forwards;
+}
+@keyframes burstOut{
+0%{width:10px;height:10px;opacity:1;transform:translate(-50%,-50%)}
+100%{width:600px;height:600px;opacity:0;transform:translate(-50%,-50%)}
+}
+
 /* АДАПТИВ */
-@media(max-width:1100px){.page{grid-template-columns:1fr 1.2fr;padding:90px 18px 70px}.profile{grid-column:1}.can-card{grid-column:2;grid-row:1 / span 2;min-height:auto}.contacts{grid-column:1}.bottom-bar{grid-column:1 / span 2}}
-@media(max-width:760px){.page{grid-template-columns:1fr;padding:85px 14px 70px;gap:14px}.profile{grid-row:auto;padding:22px 18px;gap:16px;align-items:center;text-align:center}.can-card{grid-row:auto;grid-column:1;min-height:440px;padding:16px}.contacts{grid-row:auto;padding:18px 14px;gap:10px}.bottom-bar{grid-column:1;flex-direction:column;gap:8px}.avatar-wrap{width:95px;height:95px;margin:0 auto}.title{font-size:clamp(30px,9vw,42px)}.greeting{justify-content:center}.desc{text-align:center;font-size:12px}.topbar{padding:10px 12px}.clock{font-size:13px;padding:7px 12px;gap:6px}.clock .msk{display:none}.clock svg{width:13px;height:13px}.logo{font-size:16px}.icon-btn{width:32px;height:32px}.icon-btn svg{width:14px;height:14px}.contact{padding:12px 13px;gap:10px;border-radius:16px}.contact .ico{width:36px;height:36px;border-radius:10px}.contact .ico svg{width:18px;height:18px}.contact-name{font-size:13px}.contact-handle{font-size:9px}.mini-btn{width:28px;height:28px}.mini-btn svg{width:12px;height:12px}.action-btn{padding:12px;font-size:12px}.footer{font-size:8px;bottom:10px}.toast{bottom:70px;font-size:11.5px;padding:10px 16px}.milt-txt{font-size:clamp(70px,16vw,120px)}.milt-txt.t2{display:none}.can-stage{transform:scale(.8)}}
-@media(max-width:400px){.page{padding:80px 10px 65px}.profile{padding:18px 14px}.contacts{padding:14px 12px}.title{font-size:clamp(26px,8vw,36px)}.clock{font-size:11.5px;padding:6px 10px}.contact{padding:10px 11px}.action-btn{font-size:11px;padding:11px}.can-stage{transform:scale(.7)}}
-@media(hover:none){.contact:hover{transform:none}.contact:hover .ico{transform:none}.action-btn:hover{transform:none}.icon-btn:hover{transform:none}.card:hover{transform:none}.can-card{perspective:none}.can-stage{transform:rotateX(-6deg) rotateY(20deg)!important;animation:idleCan 9s ease-in-out infinite}}
-@keyframes idleCan{0%,100%{transform:rotateX(-6deg) rotateY(-15deg)}50%{transform:rotateX(-6deg) rotateY(15deg)}}
+@media(max-width:1100px){.page{grid-template-columns:1fr 1.1fr;padding:90px 18px 70px}.profile{grid-column:1}.sphere-card{grid-column:2;grid-row:1 / span 2;min-height:auto}.contacts{grid-column:1}.bottom-bar{grid-column:1 / span 2}}
+@media(max-width:760px){.page{grid-template-columns:1fr;padding:85px 14px 70px;gap:14px}.profile{grid-row:auto;padding:22px 18px;gap:16px;align-items:center;text-align:center}.sphere-card{grid-row:auto;grid-column:1;min-height:400px;padding:16px}.contacts{grid-row:auto;padding:18px 14px;gap:10px}.bottom-bar{grid-column:1;flex-direction:column;gap:8px}.avatar-wrap{width:95px;height:95px;margin:0 auto}.title{font-size:clamp(30px,9vw,42px)}.greeting{justify-content:center}.desc{text-align:center;font-size:12px}.topbar{padding:10px 12px}.clock{font-size:13px;padding:7px 12px;gap:6px}.clock .msk{display:none}.clock svg{width:13px;height:13px}.logo{font-size:16px}.icon-btn{width:32px;height:32px}.icon-btn svg{width:14px;height:14px}.contact{padding:12px 13px;gap:10px;border-radius:16px}.contact .ico{width:36px;height:36px;border-radius:10px}.contact .ico svg{width:18px;height:18px}.contact-name{font-size:13px}.contact-handle{font-size:9px}.mini-btn{width:28px;height:28px}.mini-btn svg{width:12px;height:12px}.action-btn{padding:12px;font-size:12px}.footer{font-size:8px;bottom:10px}.toast{bottom:70px;font-size:11.5px;padding:10px 16px}.milt-txt{font-size:clamp(70px,16vw,120px)}.milt-txt.t2{display:none}.sphere-stage{width:220px;height:220px}.sphere{width:160px;height:160px}.orbit{width:260px;height:260px}.orbit2{width:280px;height:280px}.sphere-shadow{width:140px;height:24px;bottom:20px}}
+@media(max-width:400px){.page{padding:80px 10px 65px}.profile{padding:18px 14px}.contacts{padding:14px 12px}.title{font-size:clamp(26px,8vw,36px)}.clock{font-size:11.5px;padding:6px 10px}.contact{padding:10px 11px}.action-btn{font-size:11px;padding:11px}.sphere-stage{width:200px;height:200px}.sphere{width:140px;height:140px}.orbit{width:230px;height:230px}.orbit2{width:250px;height:250px}.sphere-shadow{width:120px;height:20px}}
+@media(hover:none){.contact:hover{transform:none}.contact:hover .ico{transform:none}.action-btn:hover{transform:none}.icon-btn:hover{transform:none}.card:hover{transform:none}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -217,7 +313,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 
 <main class="page">
 
-<!-- ПРОФИЛЬ -->
 <section class="card profile">
 <div class="avatar-wrap">
 <div class="avatar-ring"></div>
@@ -232,25 +327,20 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 <div class="status"><span class="dot"></span> Available for chat</div>
 </section>
 
-<!-- 3D БАНКА -->
-<section class="can-card" id="canCard">
-<div class="can-label">// milt energy</div>
-<div class="can-stage" id="canStage">
-<div class="can-cylinder" id="canCyl"></div>
-<div class="shoulder top" id="shoulderTop"></div>
-<div class="shoulder bottom" id="shoulderBottom"></div>
-<div class="can-lid"></div>
-<div class="can-lid-inner"></div>
-<div class="pull-tab"></div>
-<div class="lid-ring"></div>
-<div class="can-bottom"></div>
-<div class="shine"></div>
-<div class="can-reflect" id="canReflect"></div>
+<!-- 3D СФЕРА -->
+<section class="sphere-card" id="sphereCard">
+<div class="sphere-label">// milt core</div>
+<div class="sphere-stage" id="sphereStage">
+<div class="orbit"></div>
+<div class="orbit2"></div>
+<div class="sphere" id="sphere">
+<div class="sphere-inner" id="sphereInner"></div>
 </div>
-<div class="can-hint">← двигай курсор →</div>
+<div class="sphere-shadow"></div>
+</div>
+<div class="sphere-hint">← двигай · кликни →</div>
 </section>
 
-<!-- КОНТАКТЫ -->
 <section class="card contacts">
 <div class="section-label">// способы связи</div>
 
@@ -304,118 +394,82 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 
 <script>
 var ADMIN_PASSWORD='milt2026';
-var NUM_SEG=72,RADIUS=100,W=200,H=440,LABEL_START=26,LABEL_END=46;
 
-/* ===== ГЕНЕРАЦИЯ БАНКИ ===== */
-(function(){
-var cyl=document.getElementById('canCyl');
-var segW=(2*Math.PI*RADIUS/NUM_SEG)+2;
-for(var i=0;i<NUM_SEG;i++){
-var angle=(360/NUM_SEG)*i;
-var seg=document.createElement('div');
-seg.className='seg';
-seg.style.width=segW+'px';
-seg.style.left=(W/2-segW/2)+'px';
-seg.style.transform='rotateY('+angle+'deg) translateZ('+RADIUS+'px)';
-var rad=angle*Math.PI/180;
-var cos=Math.cos(rad);
-var brightness=0.35+0.65*Math.abs(cos);
-var redVal=Math.round(26+229*Math.max(0,cos));
-var gr=Math.round(redVal*0.5);
-var bg='linear-gradient(180deg,'+
-'rgb('+Math.round(redVal*0.6)+',0,0) 0%,'+
-'rgb('+redVal+',0,0) 15%,'+
-'rgb('+Math.round(redVal*0.9)+','+gr+','+gr+') 35%,'+
-'rgb('+Math.min(255,redVal+40)+','+Math.round(gr*1.5)+','+Math.round(gr*1.5)+') 50%,'+
-'rgb('+Math.round(redVal*0.9)+','+gr+','+gr+') 65%,'+
-'rgb('+redVal+',0,0) 85%,'+
-'rgb('+Math.round(redVal*0.6)+',0,0) 100%)';
-seg.style.background=bg;
-seg.style.filter='brightness('+brightness+')';
-seg.style.zIndex=Math.round(cos*100)+200;
-if(i>=LABEL_START&&i<=LABEL_END){
-var label=document.createElement('div');
-label.className='label';
-label.innerHTML='<div class="brand">MILT</div>'+
-'<div class="sub">ENERGY</div>'+
-'<div class="line"></div>'+
-'<div class="comp">carbonated energy drink<br>taurine · caffeine · b-vitamins</div>'+
-'<div class="barcode"></div>'+
-'<div class="vol">500ml</div>';
-seg.appendChild(label);
-}
-cyl.appendChild(seg);
-}
-})();
-
-/* ===== ПЛЕЧИ ===== */
-(function(){
-['shoulderTop','shoulderBottom'].forEach(function(id){
-var el=document.getElementById(id);
-var num=12,rad=82;
-var sw=(2*Math.PI*rad/num)+2;
-for(var i=0;i<num;i++){
-var angle=(360/num)*i;
-var s=document.createElement('div');
-s.style.position='absolute';
-s.style.width=sw+'px';
-s.style.height='16px';
-s.style.left=(W/2-sw/2)+'px';
-s.style.top=id==='shoulderTop'?'0':'auto';
-s.style.bottom=id==='shoulderTop'?'auto':'0';
-s.style.transform='rotateY('+angle+'deg) translateZ('+rad+'px) translateY('+(id==='shoulderTop'?'4px':'-4px')+')';
-s.style.background='linear-gradient(180deg,#888,#444,#222)';
-s.style.borderRadius='2px';
-s.style.filter='brightness('+(0.4+0.6*Math.abs(Math.cos(angle*Math.PI/180)))+')';
-el.appendChild(s);
-}
-});
-})();
-
-/* ===== ВРАЩЕНИЕ ===== */
-var canStage=document.getElementById('canStage');
-var canCard=document.getElementById('canCard');
-var canReflect=document.getElementById('canReflect');
-var tRotY=0,tRotX=-6,cRotY=0,cRotX=-6;
+/* ===== 3D СФЕРА: вращение за курсором ===== */
+var sphere=document.getElementById('sphere');
+var sphereStage=document.getElementById('sphereStage');
+var sphereCard=document.getElementById('sphereCard');
+var tRotY=0,tRotX=0,cRotY=0,cRotX=0;
 var lastMove=Date.now();
 
-canCard.addEventListener('mousemove',function(e){
-var r=canCard.getBoundingClientRect();
+sphereCard.addEventListener('mousemove',function(e){
+var r=sphereCard.getBoundingClientRect();
 var x=(e.clientX-r.left)/r.width-0.5;
 var y=(e.clientY-r.top)/r.height-0.5;
-tRotY=x*120;
-tRotX=-6+y*30;
+tRotY=x*40;
+tRotX=-y*30;
 lastMove=Date.now();
 });
-canCard.addEventListener('mouseleave',function(){
-tRotY=0;tRotX=-6;
+sphereCard.addEventListener('mouseleave',function(){
+tRotY=0;tRotX=0;
 });
 
-function animate(){
+function animateSphere(){
 var idle=Date.now()-lastMove>2000;
-var idleY=idle?Math.sin(Date.now()/1500)*3:0;
-var idleX=idle?Math.sin(Date.now()/1800)*1.5:0;
+var idleY=idle?Math.sin(Date.now()/1800)*8:0;
+var idleX=idle?Math.cos(Date.now()/2000)*5:0;
 cRotY+=(tRotY+idleY-cRotY)*0.08;
 cRotX+=(tRotX+idleX-cRotX)*0.08;
-canStage.style.transform='rotateX('+cRotX+'deg) rotateY('+cRotY+'deg)';
-if(canReflect){
-canReflect.style.transform='translateX(-50%) scaleY(-1) rotateY('+(-cRotY)+'deg)';
+sphere.style.transform='rotateY('+cRotY+'deg) rotateX('+cRotX+'deg) translateY('+(idle?Math.sin(Date.now()/1500)*3:0)+'px)';
+requestAnimationFrame(animateSphere);
 }
-var shadowX=cRotY*0.8;
-canCard.style.setProperty('--shx',shadowX+'px');
-requestAnimationFrame(animate);
-}
-animate();
+animateSphere();
 
 /* гироскоп */
 if(window.DeviceOrientationEvent){
 window.addEventListener('deviceorientation',function(e){
 if(e.gamma!==null){
-tRotY=Math.max(-45,Math.min(45,e.gamma));
-tRotX=-6+Math.max(-15,Math.min(15,e.beta-45));
+tRotY=Math.max(-30,Math.min(30,e.gamma));
+tRotX=-Math.max(-20,Math.min(20,e.beta-45));
 }
 });
 }
+
+/* Внутренние частицы */
+(function(){
+var inner=document.getElementById('sphereInner');
+for(var i=0;i<15;i++){
+var p=document.createElement('div');
+p.className='p';
+p.style.left=Math.random()*100+'%';
+p.style.top=Math.random()*100+'%';
+var dx=(Math.random()-0.5)*80;
+var dy=(Math.random()-0.5)*80;
+p.style.setProperty('--dx',dx+'px');
+p.style.setProperty('--dy',dy+'px');
+p.style.animationDuration=(3+Math.random()*4)+'s';
+p.style.animationDelay=Math.random()*3+'s';
+p.style.opacity=0.3+Math.random()*0.5;
+inner.appendChild(p);
+}
+})();
+
+/* Клик по сфере — пульс + всплеск энергии */
+sphereStage.addEventListener('click',function(e){
+var ring=document.createElement('div');
+ring.className='pulse-ring';
+sphereStage.appendChild(ring);
+setTimeout(function(){ring.remove()},1300);
+
+var burst=document.createElement('div');
+burst.className='energy-burst';
+burst.style.left=e.clientX+'px';
+burst.style.top=e.clientY+'px';
+document.body.appendChild(burst);
+setTimeout(function(){burst.remove()},1100);
+
+playPop();
+});
 
 /* ===== ВРЕМЯ ===== */
 function updateMSK(){
