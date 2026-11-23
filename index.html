@@ -154,6 +154,8 @@ h2 em{font-style:normal;color:var(--accent)}
   text-shadow:0 2px 14px rgba(13,12,10,.95)}
 
 /* works */
+.works-hint{display:inline-block;vertical-align:middle;margin-left:10px;font-family:var(--mono);
+  font-size:clamp(11px,1.1vw,14px);font-weight:400;letter-spacing:.06em;color:var(--dim)}
 .works{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
 .work{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:2px;
   background:rgba(13,12,10,.9);backdrop-filter:blur(8px);overflow:hidden;
@@ -258,7 +260,7 @@ footer{padding:34px 0;border-top:1px solid var(--line)}
   <div class="wrap bar">
     <a class="logo" href="#hero"><i aria-hidden="true"></i>milt</a>
     <nav aria-label="Навигация">
-      <a href="#works">Работы</a>
+      <a href="#works">Примеры</a>
       <a href="#services">Что делаю</a>
       <a href="#about">Обо мне</a>
       <a href="#contacts">Контакты</a>
@@ -293,7 +295,7 @@ footer{padding:34px 0;border-top:1px solid var(--line)}
   <section id="works">
     <div class="wrap">
       <div class="section-head reveal">
-        <h2>Работы</h2>
+        <h2>Примеры работ <span class="works-hint">(кликабельно)</span></h2>
         <p class="head-note">Два концепта под разные задачи: интерфейс подбора и сайт с характером. Открываются целиком.</p>
       </div>
       <div class="works">
