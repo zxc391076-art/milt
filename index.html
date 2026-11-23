@@ -47,6 +47,23 @@ ol,ul{padding:0;list-style:none}
 .cursor-light::after{content:"";position:absolute;left:calc(50% - 3px);top:calc(50% - 3px);width:6px;height:6px;
   border-radius:50%;background:#fffdf2;box-shadow:0 0 22px 6px rgba(255,246,214,.6)}
 
+/* ---------- animated backdrop ---------- */
+.aura{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.aura::before,.aura::after{content:"";position:absolute;width:78vw;aspect-ratio:1;border-radius:50%;
+  will-change:transform}
+.aura::before{top:-34vw;left:-22vw;
+  background:radial-gradient(circle,rgba(216,255,74,.11),transparent 64%);
+  animation:auraA 27s ease-in-out infinite alternate}
+.aura::after{bottom:-38vw;right:-24vw;width:70vw;
+  background:radial-gradient(circle,rgba(255,246,214,.08),transparent 66%);
+  animation:auraB 34s ease-in-out infinite alternate-reverse}
+@keyframes auraA{to{transform:translate3d(9vw,7vh,0) scale(1.16)}}
+@keyframes auraB{to{transform:translate3d(-7vw,-6vh,0) scale(1.22)}}
+
+.progress{position:fixed;inset:0 0 auto;height:2px;z-index:41;pointer-events:none}
+.progress i{display:block;height:100%;width:100%;transform:scaleX(0);transform-origin:0 50%;
+  background:linear-gradient(90deg,var(--accent),#fff6d6);will-change:transform}
+
 main,header,footer{position:relative;z-index:2}
 .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
 .mono{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
@@ -95,14 +112,27 @@ h1.name{font-family:var(--serif);font-weight:400;font-size:clamp(84px,18vw,214px
 .lede{font-size:clamp(20px,2.3vw,28px);line-height:1.4;max-width:620px;text-wrap:balance}
 .lede b{font-weight:400;color:var(--accent)}
 .actions{display:flex;align-items:center;gap:26px;flex-wrap:wrap;margin-top:38px}
-.btn{display:inline-block;padding:14px 24px;background:var(--accent);color:#0d0c0a;
+.btn{position:relative;overflow:hidden;display:inline-block;padding:14px 24px;background:var(--accent);color:#0d0c0a;
   font-size:15px;font-weight:600;border-radius:2px;transition:transform .25s var(--ease),background .25s}
 .btn:hover{transform:translateY(-2px);background:#e6ff7d}
+.btn::after{content:"";position:absolute;top:0;bottom:0;left:-70%;width:50%;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
+  transform:skewX(-18deg);transition:left .6s var(--ease)}
+.btn:hover::after{left:120%}
 .link-more{font-size:15px;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:3px;
   transition:color .2s,border-color .2s}
 .link-more:hover{color:var(--ink);border-color:var(--accent)}
 .status{margin-top:44px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
 .dot-live{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 4s ease-in-out infinite}
+
+/* hero entrance */
+.hero .tag,.hero .name,.hero .lede,.hero .actions,.hero .status{animation:rise .9s var(--ease) both}
+.hero .tag{animation-delay:.12s}
+.hero .name{animation-delay:.04s}
+.hero .lede{animation-delay:.24s}
+.hero .actions{animation-delay:.32s}
+.hero .status{animation-delay:.4s}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 
 /* ---------- ticker ---------- */
 .ticker{overflow:hidden;border-block:1px solid var(--line);padding:14px 0}
@@ -161,9 +191,9 @@ h2 em{font-style:normal;color:var(--accent)}
 footer{padding:34px 0;border-top:1px solid var(--line)}
 .foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--dim)}
 
-.reveal{transition:opacity .8s var(--ease),transform .8s var(--ease)}
-.js .reveal{opacity:0;transform:translateY(22px)}
-.js .reveal.in{opacity:1;transform:none}
+.reveal{transition:opacity .8s var(--ease),transform .8s var(--ease),filter .8s var(--ease)}
+.js .reveal{opacity:0;transform:translateY(22px);filter:blur(5px)}
+.js .reveal.in{opacity:1;transform:none;filter:blur(0)}
 @keyframes pulse{50%{opacity:.35}}
 
 @media (max-width:900px){
@@ -181,7 +211,7 @@ footer{padding:34px 0;border-top:1px solid var(--line)}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
-  .js .reveal{opacity:1;transform:none}
+  .js .reveal{opacity:1;transform:none;filter:none}
   .cursor-light{display:none}
   /* буквы имени остаются живыми — это их роль */
   .name .l{animation:levitate 11s ease-in-out infinite!important}
@@ -191,9 +221,11 @@ footer{padding:34px 0;border-top:1px solid var(--line)}
 </head>
 <body>
 
+<div class="aura" aria-hidden="true"></div>
 <canvas id="bg" aria-hidden="true"></canvas>
 <div class="cursor-light" id="cursorLight" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
+<div class="progress" aria-hidden="true"><i></i></div>
 
 <header id="top">
   <div class="wrap bar">
@@ -441,12 +473,14 @@ try {
   wire.instanceMatrix.needsUpdate = true;
   voxel.add(solid, wire);
   let voxelBaseY = -3.6;
+  let globeBaseX = 3.9;
   const placeVoxel = () => {
     const narrow = innerWidth < 900;
     voxel.position.z = narrow ? -16 : -7.2;
     voxelBaseY = narrow ? -6.1 : -3.6;
     voxel.scale.setScalar(narrow ? 0.72 : 1);
-    globe.position.x = narrow ? 2.4 : 3.9;
+    globeBaseX = narrow ? 2.4 : 3.9;
+    globe.position.x = globeBaseX;
     globe.scale.setScalar(narrow ? 0.62 : 1);
     globe.position.z = narrow ? -5.5 : -3.6;
   };
@@ -485,24 +519,30 @@ try {
 
     camera.position.x = target.x * 0.9;
     camera.position.y = -target.y * 0.6 + scroll * 1.4;
+    camera.position.z = 8 - scroll * 0.45;
     camera.lookAt(0, 0, 0);
 
     points.rotation.y = t * 0.04 + target.x * 0.22;
     points.rotation.x = scroll * 0.5;
+    points.material.opacity = 0.4 + Math.sin(t * 1.2) * 0.08;
 
     globe.rotation.y = t * 0.34;
     globe.rotation.x = t * 0.17;
+    globe.position.x = globeBaseX + scroll * 1.2;
     globe.position.y = 1.5 + Math.sin(t * 0.6) * 0.25;
 
     knot2.rotation.y = -t * 0.28;
     knot2.rotation.z = t * 0.1;
     knot2.position.x = -6.4 + Math.cos(t * 0.5) * 0.3;
+    knot2.position.y = -3.9 + Math.sin(t * 0.4) * 0.2 + scroll * 0.7;
 
-    voxel.rotation.y = 0.5 + t * 0.045;
+    voxel.rotation.x = -0.68 + scroll * 0.07;
+    voxel.rotation.y = 0.5 + t * 0.045 + scroll * 0.12;
     voxel.position.y = voxelBaseY + Math.sin(t * 0.35) * 0.12;
 
     lamp.position.x = target.x * 4.4;
     lamp.position.y = -target.y * 2.6 + 0.3;
+    lamp.material.opacity = 0.34 + Math.sin(t * 2.1) * 0.08;
 
     renderer.render(scene, camera);
     if (!reduced) requestAnimationFrame(tick);
@@ -559,14 +599,23 @@ if (nameInner && !reduced) {
   (function tilt() {
     rx += (trx - rx) * 0.07;
     ry += (tryy - ry) * 0.07;
-    nameInner.style.transform = `rotateX(${(4 + rx).toFixed(2)}deg) rotateY(${(-8 + ry).toFixed(2)}deg)`;
+    const s = Math.min(1, scrollY / innerHeight);
+    nameInner.style.transform =
+      `rotateX(${(4 + rx - s * 6).toFixed(2)}deg) rotateY(${(-8 + ry + s * 4).toFixed(2)}deg)`;
     requestAnimationFrame(tilt);
   })();
 }
 
-/* шапка */
+/* шапка + прогресс чтения */
 const header = document.getElementById('top');
-addEventListener('scroll', () => header.classList.toggle('scrolled', scrollY > 20), { passive: true });
+const progressBar = document.querySelector('.progress i');
+addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', scrollY > 20);
+  if (progressBar) {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    progressBar.style.transform = `scaleX(${max > 0 ? Math.min(scrollY / max, 1) : 0})`;
+  }
+}, { passive: true });
 
 /* появление блоков */
 if ('IntersectionObserver' in window) {
