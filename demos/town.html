@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D городок</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #cfe6ff; }
+  canvas { display: block; }
+  #hint {
+    position: fixed; left: 16px; bottom: 14px;
+    color: #2b3442; font: 13px/1.4 system-ui, sans-serif;
+    opacity: .7; user-select: none;
+  }
+  #hint a { color: inherit; text-decoration: none; }
+  #hint a:hover { color: #000; }
+</style>
+</head>
+<body>
+<div id="hint"><a href="../index.html">← на главную</a> · ЛКМ — вращать · колесо — зум · ПКМ — сдвиг</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xcfe6ff);
+scene.fog = new THREE.Fog(0xcfe6ff, 55, 100);
+
+const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 200);
+camera.position.set(26, 21, 26);
+
+// детерминированный рандом: городок одинаковый при каждой загрузке
+let seed = 7;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(100, 100),
+  new THREE.MeshStandardMaterial({ color: 0x7fa05a, roughness: 1 })
+);
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// сетка улиц между кварталами
+const asphalt = new THREE.MeshStandardMaterial({ color: 0x4c525c, roughness: 0.95 });
+const roadGeo = new THREE.BoxGeometry(64, 0.02, 3.4);
+for (const p of [-18, -6, 6, 18]) {
+  const a = new THREE.Mesh(roadGeo, asphalt);
+  a.position.set(0, 0.011, p);
+  a.receiveShadow = true;
+  scene.add(a);
+
+  const b = new THREE.Mesh(roadGeo, asphalt);
+  b.position.set(p, 0.012, 0);
+  b.rotation.y = Math.PI / 2;
+  b.receiveShadow = true;
+  scene.add(b);
+}
+
+// окна: одна canvas-текстура, каждому дому — клон со своим repeat
+function windowTexture() {
+  const c = document.createElement('canvas');
+  c.width = c.height = 64;
+  const g = c.getContext('2d');
+  g.fillStyle = '#fff';
+  g.fillRect(0, 0, 64, 64);
+  for (let y = 4; y < 62; y += 10) {
+    for (let x = 4; x < 62; x += 10) {
+      g.fillStyle = Math.random() < 0.5 ? '#5b7fa6' : '#8fb0cc';
+      g.fillRect(x, y, 5, 6);
+    }
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.anisotropy = 4;
+  return t;
+}
+const winTex = windowTexture();
+
+const palette = [0xd9c6a5, 0xcdd7e1, 0xdcb9a4, 0xbfcdb4, 0xe4d8c4, 0xc9bfd4];
+const roofMat = new THREE.MeshStandardMaterial({ color: 0x8b8f96, roughness: 0.9 });
+const sidewalk = new THREE.MeshStandardMaterial({ color: 0xc9c6bc, roughness: 1 });
+
+for (const cx of [-24, -12, 0, 12, 24]) {
+  for (const cz of [-24, -12, 0, 12, 24]) {
+    // тротуар под кварталом
+    const slab = new THREE.Mesh(new THREE.BoxGeometry(10, 0.1, 10), sidewalk);
+    slab.position.set(cx, 0.05, cz);
+    slab.receiveShadow = true;
+    scene.add(slab);
+
+    if (cx === 0 && cz === 0) continue; // центр — парк
+
+    for (const dx of [-2.6, 2.6]) {
+      for (const dz of [-2.6, 2.6]) {
+        if (rnd() < 0.22) continue;
+        const w = 2.4 + rnd() * 1.6;
+        const d = 2.4 + rnd() * 1.6;
+        // в центре выше, на окраинах ниже
+        const h = 2.5 + rnd() ** 2 * (16 - Math.hypot(cx, cz) * 0.45);
+
+        const map = winTex.clone();
+        map.repeat.set(Math.max(1, Math.round(w / 2.2)), Math.max(1, Math.round(h / 3)));
+        map.needsUpdate = true;
+        const side = new THREE.MeshStandardMaterial({
+          color: palette[Math.floor(rnd() * palette.length)],
+          map,
+          roughness: 0.8,
+        });
+
+        const geo = new RoundedBoxGeometry(w, h, d, 2, 0.12);
+        const b = new THREE.Mesh(geo, [side, side, roofMat, roofMat, side, side]);
+        b.position.set(cx + dx, h / 2 + 0.1, cz + dz);
+        b.castShadow = b.receiveShadow = true;
+        scene.add(b);
+      }
+    }
+  }
+}
+
+const park = new THREE.Mesh(
+  new THREE.CircleGeometry(4.6, 32),
+  new THREE.MeshStandardMaterial({ color: 0x5f8a45, roughness: 1 })
+);
+park.rotation.x = -Math.PI / 2;
+park.position.y = 0.11;
+park.receiveShadow = true;
+scene.add(park);
+
+const trunkGeo = new THREE.CylinderGeometry(0.12, 0.16, 0.9, 6);
+const trunkMat = new THREE.MeshStandardMaterial({ color: 0x7a5a3a, roughness: 1 });
+const leafGeo = new THREE.ConeGeometry(0.8, 2.2, 8);
+const leafMat = new THREE.MeshStandardMaterial({ color: 0x3f7a45, roughness: 1 });
+for (const [x, z] of [[-2.2, -1.6], [1.9, -2.2], [2.3, 1.7], [-1.8, 2.1]]) {
+  const trunk = new THREE.Mesh(trunkGeo, trunkMat);
+  trunk.position.set(x, 0.55, z);
+  trunk.castShadow = true;
+  scene.add(trunk);
+
+  const leaf = new THREE.Mesh(leafGeo, leafMat);
+  leaf.position.set(x, 2.0, z);
+  leaf.castShadow = true;
+  scene.add(leaf);
+}
+
+scene.add(new THREE.HemisphereLight(0xcfe4ff, 0x6b7a55, 1.0));
+
+const sun = new THREE.DirectionalLight(0xfff2d6, 2.2);
+sun.position.set(30, 42, 20);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -36, right: 36, top: 36, bottom: -36, near: 1, far: 120 });
+sun.shadow.camera.updateProjectionMatrix();
+scene.add(sun);
+
+// машинки катаются по улицам
+const carGeo = new THREE.BoxGeometry(0.75, 0.5, 1.5);
+const cars = [];
+function addCar(color, axis, lane, phase, speed) {
+  const m = new THREE.Mesh(
+    carGeo,
+    new THREE.MeshStandardMaterial({ color, roughness: 0.45, metalness: 0.3 })
+  );
+  m.position.y = 0.26;
+  m.castShadow = true;
+  scene.add(m);
+  cars.push({ m, axis, lane, phase, speed });
+}
+addCar(0xd94f4f, 'x', -6, 0, 7);
+addCar(0x4f7fd9, 'x', 6, 22, 5);
+addCar(0xe0b44f, 'z', -6, 10, 6);
+addCar(0x5fae6a, 'z', 6, 34, 4);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 3, 0);
+controls.enableDamping = true;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.5;
+controls.maxPolarAngle = Math.PI / 2 - 0.05;
+controls.minDistance = 10;
+controls.maxDistance = 80;
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  const t = clock.getElapsedTime();
+  for (const c of cars) {
+    const p = ((t * c.speed + c.phase) % 64) - 32;
+    if (c.axis === 'x') c.m.position.set(p, 0.26, c.lane);
+    else c.m.position.set(c.lane, 0.26, p);
+  }
+  controls.update();
+  renderer.render(scene, camera);
+});
+</script>
+</body>
+</html>

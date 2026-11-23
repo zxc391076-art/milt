@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ночной городок — 3D</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #05080f; }
+  canvas { display: block; }
+  #hint {
+    position: fixed; left: 16px; bottom: 14px;
+    color: #7c88a3; font: 13px/1.4 system-ui, sans-serif;
+    opacity: .8; user-select: none;
+  }
+  #hint a { color: inherit; text-decoration: none; }
+  #hint a:hover { color: #fff; }
+</style>
+</head>
+<body>
+<div id="hint"><a href="../index.html">← на главную</a> · ЛКМ — вращать · колесо — зум · ПКМ — сдвиг</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const R = (a, b) => a + Math.random() * (b - a);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+renderer.setSize(innerWidth, innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05080f);
+scene.fog = new THREE.Fog(0x05080f, 110, 300);
+
+const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 1, 800);
+camera.position.set(88, 62, 88);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 6, 0);
+controls.enableDamping = true;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.4;
+controls.minDistance = 30;
+controls.maxDistance = 200;
+controls.maxPolarAngle = Math.PI * 0.47;
+
+scene.add(new THREE.HemisphereLight(0x2a4573, 0x0a0c12, 0.8));
+const moon = new THREE.DirectionalLight(0x9db8ff, 0.6);
+moon.position.set(-70, 100, -50);
+scene.add(moon);
+
+/* --- план города --- */
+const CELL = 13;          // квартал + улица
+const BLOCKS = 9;
+const half = (BLOCKS * CELL) / 2;
+const cityLen = BLOCKS * CELL;
+
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(400, 400),
+  new THREE.MeshStandardMaterial({ color: 0x0a1019, roughness: 1 })
+);
+ground.rotation.x = -Math.PI / 2;
+scene.add(ground);
+
+const boxes = [], windows = [], beacons = [];
+for (let ix = 0; ix < BLOCKS; ix++) {
+  for (let iz = 0; iz < BLOCKS; iz++) {
+    const cx = -half + CELL / 2 + ix * CELL;
+    const cz = -half + CELL / 2 + iz * CELL;
+    const downtown = Math.max(0, 1 - Math.hypot(cx, cz) / 55); // центр выше окраин
+    const count = 1 + (Math.random() < 0.6 ? 1 : 0) + (Math.random() < 0.3 ? 1 : 0);
+
+    for (let k = 0; k < count; k++) {
+      const w = R(4, 8), d = R(4, 8);
+      const x = cx + R(-1, 1) * (CELL / 2 - 1.5 - w / 2);
+      const z = cz + R(-1, 1) * (CELL / 2 - 1.5 - d / 2);
+      const h = R(3, 9) + downtown * R(2, 18) + (Math.random() < 0.06 ? R(10, 20) : 0);
+      boxes.push({ x, z, w, d, h });
+      if (h > 22) beacons.push({ x, y: h + 0.3, z });
+
+      const lit = 0.10 + Math.random() * 0.10;
+      for (let y = 1.6; y < h - 1; y += 1.5) {
+        for (let t = -w / 2 + 0.7; t <= w / 2 - 0.6; t += 1.3) {
+          if (Math.random() < lit) windows.push({ x: x + t, y, z: z + d / 2 + 0.03, ry: 0 });
+          if (Math.random() < lit) windows.push({ x: x + t, y, z: z - d / 2 - 0.03, ry: Math.PI });
+        }
+        for (let t = -d / 2 + 0.7; t <= d / 2 - 0.6; t += 1.3) {
+          if (Math.random() < lit) windows.push({ x: x + w / 2 + 0.03, y, z: z + t, ry: Math.PI / 2 });
+          if (Math.random() < lit) windows.push({ x: x - w / 2 - 0.03, y, z: z + t, ry: -Math.PI / 2 });
+        }
+      }
+    }
+  }
+}
+
+// дома — один instanced-меш, оттенки через instanceColor
+const dummy = new THREE.Object3D();
+const tint = new THREE.Color();
+
+const city = new THREE.InstancedMesh(
+  new THREE.BoxGeometry(1, 1, 1).translate(0, 0.5, 0),
+  new THREE.MeshStandardMaterial({ roughness: 0.85, metalness: 0.2 }),
+  boxes.length
+);
+boxes.forEach((b, i) => {
+  dummy.position.set(b.x, 0, b.z);
+  dummy.scale.set(b.w, b.h, b.d);
+  dummy.rotation.set(0, 0, 0);
+  dummy.updateMatrix();
+  city.setMatrixAt(i, dummy.matrix);
+  city.setColorAt(i, tint.setHSL(0.6, R(0.08, 0.22), R(0.09, 0.19)));
+});
+city.computeBoundingSphere();
+scene.add(city);
+
+// окна — светящиеся плоскости, один draw call
+const winMesh = new THREE.InstancedMesh(
+  new THREE.PlaneGeometry(0.5, 0.7),
+  new THREE.MeshBasicMaterial({ toneMapped: false }),
+  windows.length
+);
+windows.forEach((wd, i) => {
+  dummy.position.set(wd.x, wd.y, wd.z);
+  dummy.rotation.set(0, wd.ry, 0);
+  dummy.scale.set(1, 1, 1);
+  dummy.updateMatrix();
+  winMesh.setMatrixAt(i, dummy.matrix);
+  winMesh.setColorAt(i, tint.set(Math.random() < 0.8 ? 0xffcf8f : 0x9ac8ff));
+});
+winMesh.computeBoundingSphere();
+scene.add(winMesh);
+
+// красные огни на высоких крышах
+if (beacons.length) {
+  const beaconMesh = new THREE.InstancedMesh(
+    new THREE.SphereGeometry(0.22, 6, 4),
+    new THREE.MeshBasicMaterial({ color: 0xff4a3a, toneMapped: false }),
+    beacons.length
+  );
+  beacons.forEach((p, i) => {
+    dummy.position.set(p.x, p.y, p.z);
+    dummy.rotation.set(0, 0, 0);
+    dummy.scale.set(1, 1, 1);
+    dummy.updateMatrix();
+    beaconMesh.setMatrixAt(i, dummy.matrix);
+  });
+  beaconMesh.computeBoundingSphere();
+  scene.add(beaconMesh);
+}
+
+// фонари на перекрёстках
+const lampMesh = new THREE.InstancedMesh(
+  new THREE.SphereGeometry(0.17, 6, 4),
+  new THREE.MeshBasicMaterial({ color: 0xffcf8a, toneMapped: false }),
+  (BLOCKS + 1) * (BLOCKS + 1)
+);
+let li = 0;
+for (let i = 0; i <= BLOCKS; i++) {
+  for (let j = 0; j <= BLOCKS; j++) {
+    dummy.position.set(-half + i * CELL, 2.6, -half + j * CELL);
+    dummy.updateMatrix();
+    lampMesh.setMatrixAt(li++, dummy.matrix);
+  }
+}
+lampMesh.computeBoundingSphere();
+scene.add(lampMesh);
+
+// разметка по осям улиц
+const lineMat = new THREE.MeshBasicMaterial({ color: 0x2c3a52, toneMapped: false });
+const lineZ = new THREE.BoxGeometry(0.12, 0.02, cityLen);
+const lineX = new THREE.BoxGeometry(cityLen, 0.02, 0.12);
+for (let i = 0; i <= BLOCKS; i++) {
+  const p = -half + i * CELL;
+  const a = new THREE.Mesh(lineZ, lineMat); a.position.set(p, 0.02, 0); scene.add(a);
+  const b = new THREE.Mesh(lineX, lineMat); b.position.set(0, 0.02, p); scene.add(b);
+}
+
+// машины
+const carGeo = new THREE.BoxGeometry(1.1, 0.6, 2.4);
+const carMat = new THREE.MeshStandardMaterial({ color: 0x131822, roughness: 0.45, metalness: 0.6 });
+const headGeo = new THREE.BoxGeometry(0.8, 0.14, 0.1);
+const headMat = new THREE.MeshBasicMaterial({ color: 0xfff3cf, toneMapped: false });
+const cars = [];
+for (let i = 0; i < 26; i++) {
+  const alongX = Math.random() < 0.5;
+  const line = -half + Math.floor(Math.random() * (BLOCKS + 1)) * CELL;
+  const lane = (Math.random() < 0.5 ? -1 : 1) * 1.7;
+  const dir = Math.random() < 0.5 ? 1 : -1;
+  const car = new THREE.Mesh(carGeo, carMat);
+  const head = new THREE.Mesh(headGeo, headMat);
+  head.position.z = 1.22;
+  car.add(head);
+  car.rotation.y = alongX ? dir * Math.PI / 2 : dir > 0 ? 0 : Math.PI;
+  const p = R(-half, half);
+  if (alongX) car.position.set(p, 0.35, line + lane);
+  else car.position.set(line + lane, 0.35, p);
+  scene.add(car);
+  cars.push({ car, alongX, dir, speed: R(5, 11) });
+}
+
+// звёзды
+const starPos = [];
+for (let i = 0; i < 900; i++) {
+  const a = Math.random() * Math.PI * 2;
+  const r = R(210, 340);
+  starPos.push(Math.cos(a) * r, R(25, 240), Math.sin(a) * r);
+}
+const stars = new THREE.Points(
+  new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3)),
+  new THREE.PointsMaterial({ color: 0x8ea6d8, size: 0.9, transparent: true, opacity: 0.75, depthWrite: false, fog: false })
+);
+scene.add(stars);
+
+// постобработка: свечение огней
+const composer = new EffectComposer(renderer);
+composer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+composer.addPass(new RenderPass(scene, camera));
+composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.9, 0.55, 0.8));
+composer.addPass(new OutputPass());
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  composer.setSize(innerWidth, innerHeight);
+});
+
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  const dt = Math.min(clock.getDelta(), 0.1);
+  for (const c of cars) {
+    const p = (c.alongX ? c.car.position.x : c.car.position.z) + c.dir * c.speed * dt;
+    const wrapped = p > half ? -half : p < -half ? half : p;
+    if (c.alongX) c.car.position.x = wrapped; else c.car.position.z = wrapped;
+  }
+  controls.update();
+  composer.render();
+});
+</script>
+</body>
+</html>

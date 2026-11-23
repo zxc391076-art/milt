@@ -150,7 +150,28 @@ section{padding:clamp(70px,9vw,120px) 0;border-top:1px solid var(--line)}
 h2{font-family:var(--serif);font-weight:400;font-size:clamp(32px,4.6vw,58px);line-height:1;
   letter-spacing:-.01em}
 h2 em{font-style:normal;color:var(--accent)}
-.head-note{max-width:34ch;font-size:15px;color:var(--muted);text-align:right}
+.head-note{max-width:34ch;font-size:15px;color:var(--muted);text-align:right;
+  text-shadow:0 2px 14px rgba(13,12,10,.95)}
+
+/* works */
+.works{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.work{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:2px;
+  background:rgba(245,242,233,.015);overflow:hidden;
+  transition:border-color .3s,transform .35s var(--ease),background .3s}
+.work:hover,.js .work.in:hover{border-color:rgba(216,255,74,.45);transform:translateY(-4px);background:rgba(216,255,74,.03)}
+.work-media{margin:0;aspect-ratio:16/10;overflow:hidden;background:#0a0a08;border-bottom:1px solid var(--line)}
+.work-media img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+.work:hover .work-media img{transform:scale(1.045)}
+.work-media img.bright{filter:brightness(1.45) contrast(1.05)}
+.work-meta{display:flex;justify-content:space-between;gap:10px;padding:14px 16px 0;
+  font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.work h3{padding:8px 16px 0;font-family:var(--serif);font-weight:400;font-size:23px;line-height:1.15}
+.work p{padding:7px 16px 0;color:var(--muted);font-size:13px;line-height:1.55}
+.work .go{display:flex;align-items:center;gap:8px;margin:18px 16px 16px;margin-top:auto;
+  padding-top:14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.work .go i{font-style:normal;transition:transform .3s var(--ease)}
+.work:hover .go i{transform:translateX(4px)}
 
 /* rows */
 .rows{border-top:1px solid var(--line)}
@@ -165,6 +186,13 @@ h2 em{font-style:normal;color:var(--accent)}
 .row .tags span{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
 
 /* about */
+.about-id{display:flex;align-items:center;gap:16px;margin-bottom:28px}
+.avatar{width:92px;height:92px;border-radius:50%;object-fit:cover;object-position:50% 35%;
+  border:1px solid var(--line);filter:grayscale(1) contrast(1.08) brightness(.95);
+  transition:filter .4s var(--ease)}
+.about-id:hover .avatar{filter:none}
+.about-id strong{display:block;font-family:var(--serif);font-weight:400;font-size:22px;line-height:1.1}
+.about-id span{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
 .about{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,6vw,80px);align-items:start}
 .about p{color:var(--muted);font-size:clamp(17px,1.6vw,20px);line-height:1.7}
 .about p+p{margin-top:18px}
@@ -231,6 +259,7 @@ footer{padding:34px 0;border-top:1px solid var(--line)}
   <div class="wrap bar">
     <a class="logo" href="#hero"><i aria-hidden="true"></i>milt</a>
     <nav aria-label="Навигация">
+      <a href="#works">Работы</a>
       <a href="#services">Что делаю</a>
       <a href="#about">Обо мне</a>
       <a href="#contacts">Контакты</a>
@@ -261,6 +290,44 @@ footer{padding:34px 0;border-top:1px solid var(--line)}
       <span>HTML — CSS — JavaScript — Three.js — WebGL — Python — aiogram — API — UI — motion —</span>
     </div>
   </div>
+
+  <section id="works">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>Работы</h2>
+        <p class="head-note">Живые сцены: открой, покрути, покорми рыб. Всё считается в браузере.</p>
+      </div>
+      <div class="works">
+        <a class="work reveal" href="demos/aquarium.html">
+          <figure class="work-media">
+            <img src="works/aquarium.jpg" alt="Аквариум: рыбки и растения в 3D-сцене" width="1440" height="900" loading="lazy">
+          </figure>
+          <div class="work-meta"><span>01 / WebGL</span><span>2026</span></div>
+          <h3>Аквариум</h3>
+          <p>Живая экосистема: рыбки, растения, каустика и кормление кликом по воде.</p>
+          <span class="go">Открыть сцену <i>→</i></span>
+        </a>
+        <a class="work reveal" href="demos/city.html">
+          <figure class="work-media">
+            <img class="bright" src="works/city.jpg" alt="Ночной город: светящиеся окна и машины" width="1440" height="900" loading="lazy">
+          </figure>
+          <div class="work-meta"><span>02 / Three.js</span><span>2026</span></div>
+          <h3>Ночной город</h3>
+          <p>Сотни зданий и тысячи окон одним вызовом отрисовки. Bloom, туман, движение машин.</p>
+          <span class="go">Открыть сцену <i>→</i></span>
+        </a>
+        <a class="work reveal" href="demos/town.html">
+          <figure class="work-media">
+            <img src="works/town.jpg" alt="Дневной городок: дома, улицы и машинки" width="1440" height="900" loading="lazy">
+          </figure>
+          <div class="work-meta"><span>03 / Three.js</span><span>2026</span></div>
+          <h3>Дневной городок</h3>
+          <p>Мягкие тени, процедурные текстуры окон и машинки, которые катаются по улицам.</p>
+          <span class="go">Открыть сцену <i>→</i></span>
+        </a>
+      </div>
+    </div>
+  </section>
 
   <section id="services">
     <div class="wrap">
@@ -300,6 +367,10 @@ footer{padding:34px 0;border-top:1px solid var(--line)}
   <section id="about">
     <div class="wrap about">
       <div class="reveal">
+        <div class="about-id">
+          <img class="avatar" src="avatar.jpg" alt="milt" width="92" height="92" loading="lazy">
+          <div><strong>milt</strong><span>сайты · боты · 3D</span></div>
+        </div>
         <h2>Обо мне</h2>
         <p style="margin-top:26px">Меня зовут <b>milt</b>. Пишу фронт, собираю ботов на Python, иногда делаю 3D.</p>
         <p>Работаю один, без прослойки из менеджеров: обсудили — сделал. Если что-то не умею, говорю сразу, а не через месяц.</p>
