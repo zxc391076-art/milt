@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f1f0ea">
+<title>Подбор авто — концепт</title>
+<meta name="description" content="Демо-подбор автомобиля за 4 вопроса: подборка из трёх машин с ценой и платежом в месяц.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f1f0ea;
+  --card:#fbfaf6;
+  --ink:#141412;
+  --muted:#6f6e66;
+  --line:rgba(20,20,18,.14);
+  --accent:#2049ff;
+  --ease:cubic-bezier(.2,.9,.2,1);
+  --display:"Unbounded","Segoe UI",sans-serif;
+  --sans:"Manrope","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 var(--sans);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,p{margin:0}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+ul{margin:0;padding:0;list-style:none}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bg i{position:absolute;display:block;border-radius:50%;filter:blur(70px);opacity:.5}
+.bg i:nth-child(1){width:52vw;aspect-ratio:1;left:-14vw;top:-16vw;
+  background:radial-gradient(circle,rgba(32,73,255,.22),transparent 65%);
+  animation:drift 26s ease-in-out infinite alternate}
+.bg i:nth-child(2){width:46vw;aspect-ratio:1;right:-12vw;top:24%;
+  background:radial-gradient(circle,rgba(255,122,26,.18),transparent 65%);
+  animation:drift 32s ease-in-out infinite alternate-reverse}
+@keyframes drift{to{transform:translate3d(8vw,6vh,0) scale(1.15)}}
+
+.top{position:fixed;inset:0 0 auto;z-index:30;background:rgba(241,240,234,.78);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1240px;margin:0 auto;padding:0 28px;height:68px;display:flex;align-items:center;
+  justify-content:space-between;gap:24px}
+.logo{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.03em}
+.logo span{color:var(--accent)}
+.top-nav{display:flex;gap:26px;margin-left:auto;font-size:13px;color:var(--muted)}
+.top-nav a{transition:color .2s}
+.top-nav a:hover{color:var(--ink)}
+.back{font-size:12px;border-bottom:1px solid var(--line);padding-bottom:2px;transition:border-color .2s,color .2s}
+.back:hover{color:var(--accent);border-color:var(--accent)}
+
+.hero{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:150px 28px 60px;
+  min-height:100svh;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:40px}
+.eyebrow{display:flex;align-items:center;gap:12px;font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:26px}
+.eyebrow::before{content:"";width:28px;height:1px;background:var(--accent)}
+.hero h1{font-family:var(--display);font-weight:600;font-size:clamp(46px,7.2vw,104px);line-height:.94;
+  letter-spacing:-.045em}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.lede{max-width:44ch;margin-top:26px;font-size:clamp(15px,1.5vw,18px);color:#4c4b45}
+.cta{display:inline-flex;align-items:center;gap:14px;margin-top:34px;padding:16px 24px;
+  border-radius:2px;background:var(--ink);color:#fff;font-size:14px;font-weight:600;
+  transition:transform .3s var(--ease),background .3s}
+.cta span{transition:transform .3s var(--ease)}
+.cta:hover{transform:translateY(-2px);background:var(--accent)}
+.cta:hover span{transform:translateX(4px)}
+.note{margin-top:18px;font-size:11.5px;color:var(--muted)}
+
+.hero-visual{position:relative;aspect-ratio:1/.9;display:grid;place-items:center}
+.hero-visual::before{content:"";position:absolute;inset:8% 2% 12%;border-radius:50%;
+  background:radial-gradient(circle,rgba(32,73,255,.16),transparent 66%)}
+.road{position:absolute;left:50%;bottom:16%;width:96%;height:2px;transform:translateX(-50%);
+  background:repeating-linear-gradient(90deg,var(--ink) 0 26px,transparent 26px 54px);
+  opacity:.22;animation:road 1.4s linear infinite}
+@keyframes road{to{background-position:-54px 0}}
+.car{position:relative;width:100%;max-width:520px;color:var(--accent);
+  filter:drop-shadow(0 30px 30px rgba(20,20,18,.18));animation:bob 5s ease-in-out infinite}
+.car .body{fill:currentColor}
+.car .glass{fill:#e8edff;opacity:.9}
+.car .wheel{fill:#1a1a1d}
+.car .rim{fill:#f1f0ea}
+@keyframes bob{50%{transform:translateY(-10px)}}
+.stamp{position:absolute;top:10%;right:6%;width:88px;aspect-ratio:1;border-radius:50%;
+  border:1px solid var(--line);display:grid;place-items:center;text-align:center;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  animation:spinText 18s linear infinite}
+.stamp::after{content:"";position:absolute;inset:12px;border-radius:50%;border:1px dashed rgba(20,20,18,.18)}
+@keyframes spinText{to{transform:rotate(360deg)}}
+
+.ticker{position:relative;z-index:1;overflow:hidden;border-block:1px solid var(--line);padding:13px 0;
+  background:rgba(255,255,255,.3)}
+.ticker-track{display:flex;width:max-content;animation:marquee 30s linear infinite}
+.ticker span{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+  padding-right:30px;white-space:nowrap}
+.ticker b{color:var(--accent);font-weight:400}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+.quiz{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:clamp(60px,9vw,120px) 28px}
+.quiz-card{border:1px solid var(--line);border-radius:24px;background:rgba(251,250,246,.86);
+  backdrop-filter:blur(8px);padding:clamp(24px,4vw,46px)}
+.quiz-top{display:flex;align-items:center;gap:20px;margin-bottom:34px}
+.step{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.step b{color:var(--ink)}
+.bar{flex:1;height:2px;background:rgba(20,20,18,.12);overflow:hidden}
+.bar i{display:block;height:100%;width:25%;background:var(--accent);transition:width .5s var(--ease)}
+.q-box{transition:opacity .18s ease,transform .18s ease}
+.q-box.out{opacity:0;transform:translateY(8px)}
+.q-box h2{font-family:var(--display);font-weight:600;font-size:clamp(24px,3.4vw,40px);
+  letter-spacing:-.03em;line-height:1.08}
+.q-hint{margin-top:10px;font-size:14px;color:var(--muted)}
+.options{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}
+.opt{display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:20px 18px;
+  text-align:left;border:1px solid var(--line);border-radius:14px;background:#fff;
+  transition:transform .25s var(--ease),border-color .25s,background .25s,color .25s}
+.opt b{font-size:16px;font-weight:600}
+.opt span{font-size:12px;line-height:1.4;color:var(--muted);transition:color .25s}
+.opt:hover{transform:translateY(-3px);border-color:var(--ink)}
+.opt.is-picked{background:var(--ink);border-color:var(--ink);color:#fff}
+.opt.is-picked span{color:rgba(255,255,255,.62)}
+.back-btn{margin-top:24px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.back-btn:hover{color:var(--ink)}
+
+.results{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:0 28px clamp(60px,9vw,110px)}
+.results-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+  flex-wrap:wrap;margin-bottom:28px}
+.results-head h2{font-family:var(--display);font-weight:600;font-size:clamp(30px,4vw,52px);
+  letter-spacing:-.04em;line-height:1}
+.results-head .eyebrow{margin-bottom:14px}
+.ghost{padding:11px 18px;border:1px solid var(--line);border-radius:2px;font-size:12px;
+  letter-spacing:.06em;text-transform:uppercase;transition:border-color .2s,color .2s}
+.ghost:hover{border-color:var(--ink);color:var(--accent)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.car-card{border:1px solid var(--line);border-radius:18px;background:var(--card);overflow:hidden;
+  transition:transform .35s var(--ease),box-shadow .35s}
+.car-card:hover{transform:translateY(-5px);box-shadow:0 26px 50px -28px rgba(20,20,18,.4)}
+.car-visual{position:relative;padding:22px 18px 8px;aspect-ratio:16/9;color:var(--tint);
+  background:linear-gradient(135deg,color-mix(in srgb,var(--tint) 20%,#f6f4ee),#f8f7f2 70%)}
+.car-visual .car{max-width:none;animation:none;color:var(--tint);
+  filter:drop-shadow(0 12px 14px rgba(20,20,18,.16))}
+.match{position:absolute;top:12px;left:12px;padding:4px 9px;border-radius:999px;background:var(--ink);
+  color:#fff;font-size:10px;letter-spacing:.08em}
+.car-body{padding:16px 18px 20px}
+.car-meta{display:flex;justify-content:space-between;gap:10px;font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted)}
+.car-body h3{font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:-.02em;margin:7px 0 10px}
+.specs{display:flex;flex-wrap:wrap;gap:6px}
+.specs li{padding:4px 8px;border:1px solid var(--line);border-radius:999px;font-size:10.5px;color:var(--muted)}
+.price{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.price b{font-family:var(--display);font-weight:600;font-size:19px;letter-spacing:-.02em}
+.price span{font-size:11px;color:var(--muted);text-align:right}
+.card-in{animation:cardIn .55s var(--ease) both;animation-delay:var(--d,0s)}
+@keyframes cardIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:30px 28px}
+.foot{max-width:1240px;margin:0 auto;display:flex;justify-content:space-between;gap:18px;
+  flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.foot a{border-bottom:1px solid var(--line)}
+.foot a:hover{color:var(--accent);border-color:var(--accent)}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+@media (max-width:900px){
+  .top-nav{display:none}
+  .hero{grid-template-columns:1fr;padding-top:120px;gap:10px;min-height:auto}
+  .hero-visual{order:-1;max-width:440px;margin:0 auto;width:100%}
+  .hero h1{font-size:clamp(44px,12vw,74px)}
+  .options{grid-template-columns:1fr}
+  .cards{grid-template-columns:1fr}
+  .car-visual{aspect-ratio:16/10}
+  .stamp{display:none}
+}
+@media (max-width:520px){
+  .top-in,.hero,.quiz,.results,footer{padding-left:18px;padding-right:18px}
+  .opt{padding:16px}
+  .quiz-card{border-radius:16px}
+  .price b{font-size:17px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<div class="bg" aria-hidden="true"><i></i><i></i></div>
+
+<header class="top">
+  <div class="top-in">
+    <a class="logo" href="../index.html">drive<span>.</span></a>
+    <nav class="top-nav" aria-label="Навигация">
+      <a href="#quiz">Подбор</a>
+    </nav>
+    <a class="back" href="../index.html">← в портфолио</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Подбор авто · концепт</p>
+      <h1>Машина,<br>которая<br><em>подходит.</em></h1>
+      <p class="lede">Четыре вопроса — три варианта. С ценой, расходом и платежом в месяц. Без звонков и менеджеров.</p>
+      <a class="cta" href="#quiz">Начать подбор <span>→</span></a>
+      <p class="note">Демо-проект: данные, модели и цены вымышлены.</p>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <span class="road"></span>
+      <svg class="car" viewBox="0 0 340 140">
+        <path class="body" d="M14 96C14 84 22 76 34 73L76 63L104 37C111 30 120 26 130 26H224C235 26 245 31 252 40L277 72L309 80C322 84 330 92 330 104V108C330 114 325 118 319 118H25C18 118 14 113 14 107Z"/>
+        <path class="glass" d="M114 62L134 40C137 36 142 34 147 34H214C220 34 226 37 230 42L248 62Z"/>
+        <circle class="wheel" cx="92" cy="112" r="22"/>
+        <circle class="rim" cx="92" cy="112" r="9"/>
+        <circle class="wheel" cx="254" cy="112" r="22"/>
+        <circle class="rim" cx="254" cy="112" r="9"/>
+      </svg>
+      <span class="stamp">4 вопроса</span>
+    </div>
+  </section>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>подбор <b>✦</b> кредит <b>✦</b> трейд-ин <b>✦</b> доставка <b>✦</b> гарантия <b>✦</b> подбор <b>✦</b> кредит <b>✦</b> трейд-ин <b>✦</b> доставка <b>✦</b> гарантия <b>✦</b></span>
+      <span>подбор <b>✦</b> кредит <b>✦</b> трейд-ин <b>✦</b> доставка <b>✦</b> гарантия <b>✦</b> подбор <b>✦</b> кредит <b>✦</b> трейд-ин <b>✦</b> доставка <b>✦</b> гарантия <b>✦</b></span>
+    </div>
+  </div>
+
+  <section class="quiz" id="quiz">
+    <div class="quiz-card reveal">
+      <div class="quiz-top">
+        <span class="step">шаг <b id="stepNow">1</b> / 4</span>
+        <div class="bar"><i id="barFill"></i></div>
+      </div>
+      <div class="q-box" id="qBox" aria-live="polite">
+        <h2 id="qTitle"></h2>
+        <p class="q-hint" id="qHint"></p>
+        <div class="options" id="options"></div>
+      </div>
+      <button class="back-btn" id="backBtn" type="button" hidden>← назад</button>
+    </div>
+  </section>
+
+  <section class="results" id="cars" hidden>
+    <div class="results-head">
+      <div>
+        <p class="eyebrow">Результат</p>
+        <h2>Ваша подборка</h2>
+      </div>
+      <button class="ghost" id="resetBtn" type="button">Пройти заново</button>
+    </div>
+    <div class="cards" id="cards"></div>
+    <p class="note">Совпадение считается по вашим ответам. Это демонстрация интерфейса, не оферта.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="foot">
+    <span>drive. — концепт подбора авто, 2026</span>
+    <a href="../index.html">milt / портфолио</a>
+  </div>
+</footer>
+
+<script>
+(() => {
+  "use strict";
+
+  const CAR_SVG = `
+    <svg class="car" viewBox="0 0 340 140" aria-hidden="true">
+      <path class="body" d="M14 96C14 84 22 76 34 73L76 63L104 37C111 30 120 26 130 26H224C235 26 245 31 252 40L277 72L309 80C322 84 330 92 330 104V108C330 114 325 118 319 118H25C18 118 14 113 14 107Z"/>
+      <path class="glass" d="M114 62L134 40C137 36 142 34 147 34H214C220 34 226 37 230 42L248 62Z"/>
+      <circle class="wheel" cx="92" cy="112" r="22"/><circle class="rim" cx="92" cy="112" r="9"/>
+      <circle class="wheel" cx="254" cy="112" r="22"/><circle class="rim" cx="254" cy="112" r="9"/>
+    </svg>`;
+
+  const STEPS = [
+    { key: "use", title: "Для чего машина?", hint: "От этого зависят расход и размер.",
+      opts: [
+        { v: "city", t: "Город", d: "Каждый день, парковка, пробки" },
+        { v: "family", t: "Семья", d: "Дети, дача, много места" },
+        { v: "trip", t: "Путешествия", d: "Трасса, багаж, полный привод" },
+      ] },
+    { key: "body", title: "Какой кузов?", hint: "Можно выбрать сердцем.",
+      opts: [
+        { v: "sedan", t: "Седан", d: "Классика и низкий расход" },
+        { v: "suv", t: "Кроссовер", d: "Высокая посадка" },
+        { v: "wagon", t: "Универсал", d: "Больше багажника" },
+      ] },
+    { key: "budget", title: "Бюджет", hint: "Считаем без кредита.",
+      opts: [
+        { v: "low", t: "До 1,5 млн ₽", d: "Компактно и выгодно" },
+        { v: "mid", t: "1,5–2,6 млн ₽", d: "Оптимум" },
+        { v: "high", t: "От 2,6 млн ₽", d: "Больше мощности" },
+      ] },
+    { key: "fuel", title: "Топливо", hint: "Электричку можно заряжать дома.",
+      opts: [
+        { v: "petrol", t: "Бензин", d: "Просто и везде" },
+        { v: "hybrid", t: "Гибрид", d: "Меньше расход" },
+        { v: "electric", t: "Электро", d: "Тишина и мгновенный разгон" },
+      ] },
+  ];
+
+  const CARS = [
+    { name: "Aster S", body: "sedan", bodyRu: "седан", uses: ["city"], fuel: "petrol", fuelRu: "бензин", price: 1290000, power: 122, cons: "6,1", drive: "передний", color: "#2049ff" },
+    { name: "Aster SX", body: "sedan", bodyRu: "седан", uses: ["city", "trip"], fuel: "petrol", fuelRu: "бензин", price: 1680000, power: 150, cons: "6,8", drive: "передний", color: "#6b3cff" },
+    { name: "Kite Hybrid", body: "sedan", bodyRu: "седан", uses: ["city"], fuel: "hybrid", fuelRu: "гибрид", price: 1890000, power: 140, cons: "4,2", drive: "передний", color: "#0e9f7a" },
+    { name: "Nord Wagon", body: "wagon", bodyRu: "универсал", uses: ["family", "trip"], fuel: "petrol", fuelRu: "бензин", price: 1980000, power: 160, cons: "7,4", drive: "полный", color: "#ff7a1a" },
+    { name: "Nord Cross", body: "suv", bodyRu: "кроссовер", uses: ["family"], fuel: "petrol", fuelRu: "бензин", price: 2290000, power: 177, cons: "8,1", drive: "полный", color: "#d73535" },
+    { name: "Terra X", body: "suv", bodyRu: "кроссовер", uses: ["trip", "family"], fuel: "petrol", fuelRu: "бензин", price: 2690000, power: 200, cons: "8,9", drive: "полный", color: "#8a8f1f" },
+    { name: "Kite Family", body: "suv", bodyRu: "кроссовер", uses: ["family", "city"], fuel: "hybrid", fuelRu: "гибрид", price: 2490000, power: 165, cons: "5,6", drive: "передний", color: "#147a6a" },
+    { name: "Volt E", body: "suv", bodyRu: "кроссовер", uses: ["city"], fuel: "electric", fuelRu: "электро", price: 2790000, power: 204, cons: "0", drive: "задний", color: "#1c9fe0" },
+    { name: "Volt E Touring", body: "wagon", bodyRu: "универсал", uses: ["trip", "family"], fuel: "electric", fuelRu: "электро", price: 3190000, power: 230, cons: "0", drive: "полный", color: "#2163c9" },
+  ];
+
+  const answers = {};
+  let step = 0;
+
+  const $ = (sel) => document.querySelector(sel);
+  const qBox = $("#qBox");
+  const qTitle = $("#qTitle");
+  const qHint = $("#qHint");
+  const options = $("#options");
+  const stepNow = $("#stepNow");
+  const barFill = $("#barFill");
+  const backBtn = $("#backBtn");
+  const quiz = $("#quiz");
+  const results = $("#cars");
+  const cards = $("#cards");
+
+  const money = (n) => new Intl.NumberFormat("ru-RU").format(n) + " ₽";
+  const tier = (price) => (price < 1500000 ? "low" : price < 2600000 ? "mid" : "high");
+
+  function renderStep() {
+    const s = STEPS[step];
+    qTitle.textContent = s.title;
+    qHint.textContent = s.hint;
+    stepNow.textContent = String(step + 1);
+    barFill.style.width = ((step + 1) / STEPS.length) * 100 + "%";
+    backBtn.hidden = step === 0;
+
+    options.innerHTML = "";
+    s.opts.forEach((opt) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "opt" + (answers[s.key] === opt.v ? " is-picked" : "");
+      b.innerHTML = `<b>${opt.t}</b><span>${opt.d}</span>`;
+      b.addEventListener("click", () => pick(s.key, opt.v, b));
+      options.appendChild(b);
+    });
+  }
+
+  function pick(key, value, btn) {
+    answers[key] = value;
+    btn.classList.add("is-picked");
+    setTimeout(() => {
+      if (step < STEPS.length - 1) {
+        step++;
+        qBox.classList.add("out");
+        setTimeout(() => {
+          renderStep();
+          qBox.classList.remove("out");
+        }, 170);
+      } else {
+        showResults();
+      }
+    }, 180);
+  }
+
+  function scoreOf(car) {
+    let score = 0;
+    if (car.uses.includes(answers.use)) score += 3;
+    if (car.body === answers.body) score += 2;
+    if (car.fuel === answers.fuel) score += 2;
+    if (tier(car.price) === answers.budget) score += 2;
+    return score;
+  }
+
+  function showResults() {
+    const ranked = CARS
+      .map((car, i) => ({ car, i, score: scoreOf(car) }))
+      .sort((a, b) => b.score - a.score || a.i - b.i)
+      .slice(0, 3);
+
+    cards.innerHTML = ranked.map(({ car }, i) => {
+      const match = Math.min(97, 55 + scoreOf(car) * 5);
+      const monthly = Math.round(car.price / 54 / 100) * 100;
+      const cons = car.fuel === "electric" ? "0 л" : car.cons + " л";
+      return `
+        <article class="car-card card-in" style="--tint:${car.color};--d:${i * 0.08}s">
+          <div class="car-visual">
+            <span class="match">${match}% совпадение</span>
+            ${CAR_SVG}
+          </div>
+          <div class="car-body">
+            <div class="car-meta"><span>${car.bodyRu}</span><span>${car.fuelRu}</span></div>
+            <h3>${car.name}</h3>
+            <ul class="specs">
+              <li>${car.power} л.с.</li>
+              <li>${cons} / 100 км</li>
+              <li>${car.drive} привод</li>
+            </ul>
+            <div class="price">
+              <b>${money(car.price)}</b>
+              <span>от ${money(monthly)} / мес.<br>в кредит</span>
+            </div>
+          </div>
+        </article>`;
+    }).join("");
+
+    quiz.hidden = true;
+    results.hidden = false;
+    results.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function reset() {
+    Object.keys(answers).forEach((k) => delete answers[k]);
+    step = 0;
+    results.hidden = true;
+    quiz.hidden = false;
+    renderStep();
+    quiz.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  backBtn.addEventListener("click", () => {
+    if (step === 0) return;
+    step--;
+    const s = STEPS[step];
+    delete answers[s.key];
+    qBox.classList.add("out");
+    setTimeout(() => {
+      renderStep();
+      qBox.classList.remove("out");
+    }, 170);
+  });
+
+  $("#resetBtn").addEventListener("click", reset);
+
+  renderStep();
+
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        en.target.classList.add("in");
+        io.unobserve(en.target);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+  } else {
+    document.querySelectorAll(".reveal").forEach((el) => el.classList.add("in"));
+  }
+})();
+</script>
+</body>
+</html>

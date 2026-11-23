@@ -156,17 +156,16 @@ h2 em{font-style:normal;color:var(--accent)}
 /* works */
 .works{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
 .work{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:2px;
-  background:rgba(245,242,233,.015);overflow:hidden;
+  background:rgba(13,12,10,.9);backdrop-filter:blur(8px);overflow:hidden;
   transition:border-color .3s,transform .35s var(--ease),background .3s}
-.work:hover,.js .work.in:hover{border-color:rgba(216,255,74,.45);transform:translateY(-4px);background:rgba(216,255,74,.03)}
+.work:hover,.js .work.in:hover{border-color:rgba(216,255,74,.45);transform:translateY(-4px);background:rgba(13,12,10,.96)}
 .work-media{margin:0;aspect-ratio:16/10;overflow:hidden;background:#0a0a08;border-bottom:1px solid var(--line)}
 .work-media img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
 .work:hover .work-media img{transform:scale(1.045)}
-.work-media img.bright{filter:brightness(1.45) contrast(1.05)}
 .work-meta{display:flex;justify-content:space-between;gap:10px;padding:14px 16px 0;
   font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
 .work h3{padding:8px 16px 0;font-family:var(--serif);font-weight:400;font-size:23px;line-height:1.15}
-.work p{padding:7px 16px 0;color:var(--muted);font-size:13px;line-height:1.55}
+.work p{padding:7px 16px 0;max-width:52ch;color:var(--muted);font-size:13px;line-height:1.55}
 .work .go{display:flex;align-items:center;gap:8px;margin:18px 16px 16px;margin-top:auto;
   padding-top:14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10px;
   letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
@@ -295,35 +294,26 @@ footer{padding:34px 0;border-top:1px solid var(--line)}
     <div class="wrap">
       <div class="section-head reveal">
         <h2>Работы</h2>
-        <p class="head-note">Живые сцены: открой, покрути, покорми рыб. Всё считается в браузере.</p>
+        <p class="head-note">Два концепта под разные задачи: интерфейс подбора и сайт с характером. Открываются целиком.</p>
       </div>
       <div class="works">
-        <a class="work reveal" href="demos/aquarium.html">
+        <a class="work reveal" href="demos/auto.html">
           <figure class="work-media">
-            <img src="works/aquarium.jpg" alt="Аквариум: рыбки и растения в 3D-сцене" width="1440" height="900" loading="lazy">
+            <img src="works/auto.jpg" alt="Подбор авто: экран с автомобилем и квизом" width="1440" height="900" loading="lazy">
           </figure>
-          <div class="work-meta"><span>01 / WebGL</span><span>2026</span></div>
-          <h3>Аквариум</h3>
-          <p>Живая экосистема: рыбки, растения, каустика и кормление кликом по воде.</p>
-          <span class="go">Открыть сцену <i>→</i></span>
+          <div class="work-meta"><span>01 / Product UI</span><span>2026</span></div>
+          <h3>Подбор авто</h3>
+          <p>Квиз из четырёх шагов, подборка с совпадением, ценами и платежом в месяц. Логика и состояние — на клиенте.</p>
+          <span class="go">Открыть проект <i>→</i></span>
         </a>
-        <a class="work reveal" href="demos/city.html">
+        <a class="work reveal" href="demos/spot.html">
           <figure class="work-media">
-            <img class="bright" src="works/city.jpg" alt="Ночной город: светящиеся окна и машины" width="1440" height="900" loading="lazy">
+            <img src="works/spot.jpg" alt="volna spot: сайт кофейни с крупной типографикой" width="1440" height="900" loading="lazy">
           </figure>
-          <div class="work-meta"><span>02 / Three.js</span><span>2026</span></div>
-          <h3>Ночной город</h3>
-          <p>Сотни зданий и тысячи окон одним вызовом отрисовки. Bloom, туман, движение машин.</p>
-          <span class="go">Открыть сцену <i>→</i></span>
-        </a>
-        <a class="work reveal" href="demos/town.html">
-          <figure class="work-media">
-            <img src="works/town.jpg" alt="Дневной городок: дома, улицы и машинки" width="1440" height="900" loading="lazy">
-          </figure>
-          <div class="work-meta"><span>03 / Three.js</span><span>2026</span></div>
-          <h3>Дневной городок</h3>
-          <p>Мягкие тени, процедурные текстуры окон и машинки, которые катаются по улицам.</p>
-          <span class="go">Открыть сцену <i>→</i></span>
+          <div class="work-meta"><span>02 / Editorial</span><span>2026</span></div>
+          <h3>volna spot</h3>
+          <p>Сайт кофейни-винотеки: крупный шрифт, живая галерея, меню и настроение. Вся графика нарисована кодом.</p>
+          <span class="go">Открыть проект <i>→</i></span>
         </a>
       </div>
     </div>
