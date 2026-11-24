@@ -54,7 +54,9 @@ main,header,footer{position:relative;z-index:2}
 header{position:fixed;inset:0 0 auto;z-index:40;background:#0b0a08;
   border-bottom:1px solid var(--line);transition:border-color .3s,background .3s}
 header.scrolled{background:#080705;border-color:#3a3629}
-.bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px;height:64px}
+.bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px;height:64px;
+  transition:height .25s var(--ease)}
+header.scrolled .bar{height:56px}
 .logo{justify-self:start;display:inline-flex;align-items:center;gap:9px;
   font-family:var(--serif);font-size:22px;letter-spacing:-.02em;line-height:1}
 .logo i{display:block;width:8px;height:8px;background:var(--accent);border-radius:0;
@@ -63,10 +65,24 @@ nav{display:flex;gap:8px;justify-self:center;align-items:center}
 nav a{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
   color:var(--muted);padding:7px 10px;transition:background .15s steps(2,end),color .15s}
 nav a:hover{background:var(--accent);color:#0b0a08}
+nav a.active{color:var(--accent)}
 .top-link{justify-self:end;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
   color:var(--muted);padding:8px 13px;border:1px solid var(--line);
   transition:background .15s steps(2,end),color .15s,border-color .15s}
 .top-link:hover{background:var(--accent);border-color:var(--accent);color:#0b0a08}
+
+/* ---------- боковой рельс ---------- */
+.rail{position:fixed;left:22px;top:50%;transform:translateY(-50%);z-index:30;padding:0;
+  display:flex;flex-direction:column;align-items:flex-start;gap:15px}
+.rail a{display:flex;align-items:center;gap:8px;padding:0;font-family:var(--mono);font-size:9.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);transition:color .15s}
+.rail a b{font-weight:400;transition:color .15s}
+.rail a span{max-width:0;overflow:hidden;white-space:nowrap;opacity:0;color:var(--accent);
+  transition:max-width .25s steps(3,end),opacity .2s}
+.rail a:hover{background:transparent;color:var(--dim)}
+.rail a:hover b,.rail a.active b{color:var(--accent)}
+.rail a:hover span,.rail a.active span{max-width:90px;opacity:1}
+@media (max-width:1340px){.rail{display:none}}
 
 /* ---------- герой ---------- */
 .hero{position:relative;min-height:100svh;display:grid;place-items:center;text-align:center;
@@ -135,11 +151,12 @@ h1.name{font-family:var(--serif);font-weight:400;font-size:clamp(76px,17vw,200px
 @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
 /* ---------- бегущая строка ---------- */
-.ticker{overflow:hidden;border-block:1px solid var(--line);padding:13px 0;background:#0b0a08}
-.ticker-track{display:flex;width:max-content;animation:marquee 38s linear infinite}
-.ticker-track span{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;
-  color:var(--dim);padding-right:38px;white-space:nowrap}
-.ticker-track b{color:var(--accent);font-weight:400}
+.ticker{overflow:hidden;border-block:1px solid var(--line);padding:16px 0;background:#0b0a08}
+.ticker-track{display:flex;width:max-content;animation:marquee 46s linear infinite}
+.ticker-group{display:flex;align-items:center;gap:26px;padding-right:26px}
+.ticker-group span{font-family:var(--serif);font-size:clamp(20px,3vw,38px);letter-spacing:-.01em;
+  text-transform:uppercase;color:var(--ink);white-space:nowrap;line-height:1}
+.ticker-group b{color:var(--accent);font-size:.55em;font-weight:400}
 .ticker:hover .ticker-track{animation-play-state:paused}
 @keyframes marquee{to{transform:translateX(-50%)}}
 
@@ -155,7 +172,7 @@ section.hero{background:transparent;background-image:none;border-top:0}
   background:var(--accent);color:#0b0a08;font-family:var(--mono);font-size:10px;
   letter-spacing:.16em;text-transform:uppercase}
 h2{font-family:var(--serif);font-weight:400;font-size:clamp(34px,4.8vw,62px);line-height:1.02;
-  letter-spacing:-.015em;text-wrap:balance}
+  letter-spacing:-.015em;text-wrap:balance;transition:clip-path .8s steps(10,end) .1s}
 h2 em{font-style:normal;color:var(--accent)}
 .head-note{justify-self:end;max-width:34ch;font-size:14px;line-height:1.6;color:var(--muted);text-align:right}
 
@@ -166,8 +183,13 @@ h2 em{font-style:normal;color:var(--accent)}
 .work{position:relative;display:flex;flex-direction:column;border:1px solid var(--line);
   background:var(--panel);box-shadow:8px 8px 0 #060605;
   transition:transform .18s steps(2,end),border-color .18s,box-shadow .18s}
-.work:hover,.js .work.reveal.in:hover{transform:translate(-3px,-3px);border-color:var(--accent);
+.work:hover,.js .work.reveal.in:hover{border-color:var(--accent);
   box-shadow:11px 11px 0 rgba(216,255,74,.22)}
+.work::before,.work::after{content:"";position:absolute;width:9px;height:9px;border:2px solid var(--accent);
+  opacity:0;pointer-events:none;z-index:5;transition:opacity .12s}
+.work::before{top:-2px;left:-2px;border-right:0;border-bottom:0}
+.work::after{bottom:-2px;right:-2px;border-left:0;border-top:0}
+.work:hover::before,.work:hover::after{opacity:1}
 .work-media{position:relative;margin:0;aspect-ratio:16/10;overflow:hidden;border-bottom:1px solid var(--line)}
 .work-media::before{content:"";position:absolute;z-index:3;inset:0 0 auto;height:30px;
   background:#15140f;border-bottom:1px solid var(--line)}
@@ -202,6 +224,11 @@ h2 em{font-style:normal;color:var(--accent)}
   padding:4px 8px;border:1px solid var(--line);transition:color .15s,border-color .15s}
 .row:hover .n,.row:hover p{color:#0b0a08}
 .row:hover .tags span{color:#0b0a08;border-color:rgba(11,10,8,.4)}
+.js .rows .row{opacity:0;transform:translateY(14px);transition:opacity .5s var(--ease),
+  transform .5s var(--ease),background .15s steps(2,end),padding-left .2s steps(2,end)}
+.js .rows.in .row{opacity:1;transform:none}
+.js .rows.in .row:nth-child(2){transition-delay:.07s}
+.js .rows.in .row:nth-child(3){transition-delay:.14s}
 
 /* ---------- обо мне ---------- */
 .about{display:grid;grid-template-columns:1.04fr .96fr;gap:clamp(36px,6vw,80px);align-items:start}
@@ -224,6 +251,13 @@ h2 em{font-style:normal;color:var(--accent)}
 .fact span{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
 .fact strong{font-weight:400;color:var(--ink);text-align:right;transition:color .15s}
 .fact:hover strong{color:var(--accent)}
+.js .facts .fact{opacity:0;transform:translateY(10px);transition:opacity .45s var(--ease),
+  transform .45s var(--ease),background .15s steps(2,end),padding-left .18s steps(2,end)}
+.js .facts.in .fact{opacity:1;transform:none}
+.js .facts.in .fact:nth-child(2){transition-delay:.05s}
+.js .facts.in .fact:nth-child(3){transition-delay:.1s}
+.js .facts.in .fact:nth-child(4){transition-delay:.15s}
+.js .facts.in .fact:nth-child(5){transition-delay:.2s}
 
 /* ---------- контакты ---------- */
 .contacts{display:grid;grid-template-columns:1fr;border-top:1px solid var(--line);counter-reset:contact}
@@ -247,6 +281,11 @@ h2 em{font-style:normal;color:var(--accent)}
   font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
   transition:background .15s steps(2,end),color .15s,border-color .15s}
 .copy:hover{background:var(--accent);border-color:var(--accent);color:#0b0a08}
+.js .contacts .contact{opacity:0;transform:translateY(12px);transition:opacity .45s var(--ease),
+  transform .45s var(--ease),background .15s steps(2,end),padding-left .2s steps(2,end)}
+.js .contacts.in .contact{opacity:1;transform:none}
+.js .contacts.in .contact:nth-child(2){transition-delay:.06s}
+.js .contacts.in .contact:nth-child(3){transition-delay:.12s}
 
 /* ---------- подвал ---------- */
 footer{padding:clamp(30px,4vw,48px) 0 30px;background:var(--accent);color:#0b0a08;
@@ -261,6 +300,9 @@ footer{padding:clamp(30px,4vw,48px) 0 30px;background:var(--accent);color:#0b0a0
 .reveal{transition:opacity .5s var(--ease),transform .5s var(--ease)}
 .js .reveal{opacity:0;transform:translateY(18px)}
 .js .reveal.in{opacity:1;transform:none}
+.js .reveal h2{clip-path:inset(0 100% 0 0)}
+.js .reveal.in h2{clip-path:inset(0 0 0 0)}
+.js .work:nth-child(2){transition-delay:.08s}
 
 @media (max-width:960px){
   .bar{grid-template-columns:1fr auto}
@@ -311,6 +353,13 @@ footer{padding:clamp(30px,4vw,48px) 0 30px;background:var(--accent);color:#0b0a0
   </div>
 </header>
 
+<nav class="rail" aria-label="Разделы страницы">
+  <a href="#works"><b>01</b><span>Примеры</span></a>
+  <a href="#services"><b>02</b><span>Что делаю</span></a>
+  <a href="#about"><b>03</b><span>Обо мне</span></a>
+  <a href="#contacts"><b>04</b><span>Контакты</span></a>
+</nav>
+
 <main>
   <section class="hero" id="hero">
     <div class="wrap">
@@ -330,8 +379,12 @@ footer{padding:clamp(30px,4vw,48px) 0 30px;background:var(--accent);color:#0b0a0
 
   <div class="ticker" aria-hidden="true">
     <div class="ticker-track">
-      <span>HTML — CSS — JavaScript — Three.js — WebGL — Python — aiogram — API — UI — motion —</span>
-      <span>HTML — CSS — JavaScript — Three.js — WebGL — Python — aiogram — API — UI — motion —</span>
+      <div class="ticker-group">
+        <span>сайты</span><b>✦</b><span>telegram-боты</span><b>✦</b><span>3d и motion</span><b>✦</b><span>html / css / js</span><b>✦</b><span>python · aiogram</span><b>✦</b>
+      </div>
+      <div class="ticker-group">
+        <span>сайты</span><b>✦</b><span>telegram-боты</span><b>✦</b><span>3d и motion</span><b>✦</b><span>html / css / js</span><b>✦</b><span>python · aiogram</span><b>✦</b>
+      </div>
     </div>
   </div>
 
@@ -707,16 +760,27 @@ if (nameInner && !reduced) {
   })();
 }
 
-/* шапка + прогресс чтения */
+/* шапка, прогресс, активный раздел */
 const header = document.getElementById('top');
 const progressBar = document.querySelector('.progress i');
+const railLinks = [...document.querySelectorAll('.rail a')];
+const navLinks = [...document.querySelectorAll('header nav a')];
+const secEls = railLinks.map(a => document.querySelector(a.getAttribute('href')));
+const setActive = () => {
+  let active = -1;
+  secEls.forEach((s, i) => { if (s && s.getBoundingClientRect().top <= innerHeight * 0.35) active = i; });
+  railLinks.forEach((a, i) => a.classList.toggle('active', i === active));
+  navLinks.forEach(a => a.classList.toggle('active', !!secEls[active] && a.getAttribute('href') === '#' + secEls[active].id));
+};
 addEventListener('scroll', () => {
   header.classList.toggle('scrolled', scrollY > 20);
   if (progressBar) {
     const max = document.documentElement.scrollHeight - innerHeight;
     progressBar.style.transform = `scaleX(${max > 0 ? Math.min(scrollY / max, 1) : 0})`;
   }
+  setActive();
 }, { passive: true });
+setActive();
 
 /* появление блоков */
 if ('IntersectionObserver' in window) {
